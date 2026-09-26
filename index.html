@@ -7,45 +7,45 @@
 <!-- ============================================================
      BARBER 33 — Poreč. Public site for a walk-in barbershop.
 
-     FILL IN BEFORE GOING LIVE — everything the shop has to confirm
-     lives in two places, both marked. Search the file for "FILL":
+     FILL IN BEFORE GOING LIVE — search the file for "FILL":
 
-       1. the SHOP object at the bottom of this file — phone,
-          address, Instagram. It drives every call button, every
-          directions link and the contact block. Leave a field
-          empty and the site quietly stops offering that button
-          rather than dialling a wrong number.
-       2. the JSON-LD block a few lines below — the same facts
-          again, for Google's local results. Keep the two in step.
+       1. the SHOP object at the foot of this file — phone, address,
+          Instagram. It drives every call button, every directions
+          link and the contact block. Leave a field empty and the
+          site stops offering that button rather than dialling a
+          wrong number.
+       2. the JSON-LD block below — the same facts again, for
+          Google's local results. Keep the two in step.
+       3. THE LOGO. The header and the loading screen currently set
+          the name in type. Drop the real mark in as assets/logo.svg
+          (or .png) and uncomment the two <img> lines marked
+          "FILL: logo".
 
-     Also worth a second pair of eyes from the shop:
-       · the prices and durations in the Cjenik section
-       · the opening hours table (the open/closed badge is
-         computed from it, so it is the one thing that must be right)
-       · the quiet-times note under the hours
-       · "Hrvatski i engleski" in the What we do cards
+     Also worth a second pair of eyes from the shop: the prices and
+     durations, the opening hours table (the open/closed badge is
+     computed from it), the quiet-times note, and the claim that the
+     chair speaks Croatian and English.
 
-     Photos: the hero is assets/hero-*.jpg, one photograph at three
-     widths. For the gallery, drop shop-1.jpg … shop-5.jpg into
-     assets/ and it picks them up; until then those tiles fall back
-     to a drawn panel instead of a broken image.
+     Motion: every animation is gated on prefers-reduced-motion and
+     every hover on (hover: hover). The loading screen removes itself
+     on a failsafe timer, so a slow photograph can never leave anyone
+     staring at a covered page, and <noscript> disables the lot.
 
-     No build step, no framework, one file — same as everything
-     else here. Croatian is the page; English is a swap away and
-     happens on its own for a phone that is not set to Croatian.
+     No build step, no framework, one file.
      ============================================================ -->
 
 <title>Barber 33 — walk-in barbershop u Poreču</title>
 <meta name="description" content="Barber 33 je walk-in barbershop u Poreču. Bez naručivanja — radimo po redu dolaska. Šišanje, fade, brijanje britvom i oblikovanje brade.">
-<meta name="theme-color" content="#0C0C0E">
+<meta name="theme-color" content="#0A0B0C">
 <meta name="color-scheme" content="dark">
 
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
-<!-- The hero photograph is the largest thing painted on the page; without
-     this the browser does not find it until it has parsed the stylesheet. -->
+<!-- The hero photograph is the largest thing painted on the page, and the
+     loading screen waits on it; without this the browser does not go looking
+     for it until it has parsed the stylesheet. -->
 <link rel="preload" as="image" href="assets/hero-1400.jpg"
       imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
       imagesizes="100vw" fetchpriority="high">
@@ -59,11 +59,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- FILL: the same facts as SHOP, for Google's local panel. Everything in
-     square brackets is a placeholder and should be replaced or the line
-     deleted — a wrong address here outlives a wrong address on the page. -->
+     square brackets is a placeholder — replace it or delete the line. A
+     wrong address here outlives a wrong address on the page. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -92,374 +92,576 @@
 
 <style>
 /* =========================================================
-   PALETTE
-   Warm near-black, cream and brass. The barber red is loud on a
-   dark page and fails contrast at text sizes, so it is only ever
-   a rule, a stripe or a dot — never a word you have to read.
+   TOKENS
+
+   The green is the shop's own wall, sampled off the photographs
+   rather than picked from a palette — and it is the green the logo
+   is drawn in. It is the one colour a customer already recognises
+   from standing in the room.
+
+   The barber red fails contrast at text sizes on this background,
+   so it is only ever a rule, a stripe or a dot, never a word.
    ========================================================= */
 :root{
-  --ink:#0C0C0E; --ink-2:#131317; --ink-3:#1A1A20;
-  --cream:#F6F2EA; --cream-2:#CFC8BD; --muted:#968E84;
+  --ink:#0A0B0C; --ink-2:#101214; --ink-3:#171A1D;
+  --green:#12302A; --green-2:#5B9A8B;
+  --cream:#F6F2EA; --cream-2:#CFC8BD; --muted:#978F85;
   --brass:#C8A046; --brass-2:#E2BE6B; --red:#C0392E;
-  --line:rgba(246,242,234,.10); --line-2:rgba(246,242,234,.055);
+  --line:rgba(246,242,234,.11); --line-2:rgba(246,242,234,.06);
   --ok:#5BBE7E;
-  --r:14px; --r-s:10px;
-  --wrap:1080px;
-  --display:"Oswald",'Haettenschweiler','Arial Narrow',system-ui,sans-serif;
+
+  /* The built-in CSS easings are too weak to read as intentional.
+     ease-in never appears here: it delays the first movement, which is
+     the exact moment the eye is on it. */
+  --out:cubic-bezier(.23,1,.32,1);
+  --in-out:cubic-bezier(.77,0,.175,1);
+
+  --display:"Oswald",'Arial Narrow',system-ui,sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --bar:0px;               /* set by JS to the sticky mobile bar's height */
+  --wrap:1120px;
+  --bar:0px;                     /* set by JS to the phone call bar's height */
 }
 
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
-@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
 body{
   margin:0;background:var(--ink);color:var(--cream);
   font:400 16px/1.65 var(--body);
   -webkit-font-smoothing:antialiased;
-  /* room for the call bar that sits over the bottom of the page on a phone */
   padding-bottom:var(--bar);
+  overflow-x:clip;
 }
 img{max-width:100%;display:block;}
 a{color:inherit;}
 p{margin:0;}
-h1,h2,h3{margin:0;font-family:var(--display);font-weight:600;line-height:1.05;
-  letter-spacing:.005em;text-transform:uppercase;
-  /* Croatian headlines carry long single words — NARUČIVANJA, APLIKACIJA.
-     If Oswald has not arrived the fallback sets them much wider, and on a
-     small phone one word was pushing the whole page sideways. Breaking a
-     word is worse than a line break and better than a scrollbar. */
-  overflow-wrap:break-word;}
-h1{font-size:clamp(34px,8.4vw,74px);font-weight:700;}
-h2{font-size:clamp(26px,4.6vw,44px);}
-h3{font-size:19px;letter-spacing:.02em;}
 
-:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px;}
+/* Tracking is size-specific. Large display type reads too loose as it
+   grows and wants negative tracking; the small caps labels want the
+   opposite. One letter-spacing for everything is wrong somewhere. */
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:600;
+  text-transform:uppercase;overflow-wrap:break-word;}
+h1{font-size:clamp(38px,8.6vw,88px);font-weight:700;line-height:.92;letter-spacing:-.018em;}
+h2{font-size:clamp(27px,4.8vw,50px);line-height:.98;letter-spacing:-.012em;}
+h3{font-size:19px;line-height:1.2;letter-spacing:.005em;}
+
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
 
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px;}
-section{padding:clamp(54px,8vw,96px) 0;}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:9px;
-  font:600 12px/1 var(--body);letter-spacing:.17em;text-transform:uppercase;
-  color:var(--brass);
-}
-.eyebrow::before{content:'';width:22px;height:2px;background:var(--red);flex:none;}
-.sec-head{max-width:640px;margin-bottom:clamp(28px,4.4vw,44px);}
-.sec-head h2{margin:14px 0 14px;}
-.lede{color:var(--cream-2);font-size:clamp(16px,1.7vw,18px);line-height:1.62;}
+section{padding:clamp(60px,9vw,120px) 0;}
+.lede{color:var(--cream-2);font-size:clamp(16px,1.7vw,18.5px);line-height:1.62;}
 .muted{color:var(--muted);font-size:14.5px;line-height:1.6;}
 
-/* a value the shop still has to confirm — impossible to ship by accident */
-.fill{
-  color:var(--brass);border-bottom:1px dashed var(--brass);
-  font-style:normal;opacity:.85;
+/* ---------- section heads ---------- */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font:600 11.5px/1 var(--body);letter-spacing:.19em;text-transform:uppercase;
+  color:var(--brass);
 }
-.fill::after{content:' ?';font-size:.8em;vertical-align:super;}
+.eyebrow::before{content:'';width:26px;height:2px;background:var(--red);flex:none;}
+.sec-head{max-width:660px;margin-bottom:clamp(30px,4.6vw,52px);position:relative;}
+.sec-head h2{margin:15px 0 15px;}
+/* An oversized index numeral, the way a printed price list numbers its
+   sections. Decorative, so it is hidden from a reader. */
+.idx{
+  position:absolute;right:0;top:-.22em;
+  font:700 clamp(58px,10vw,120px)/1 var(--display);letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px rgba(246,242,234,.09);
+  pointer-events:none;user-select:none;
+}
+@media (max-width:760px){ .idx{display:none;} }
 
-/* ---------- buttons ---------- */
+/* =========================================================
+   BUTTONS
+
+   Two stacked faces holding the same label, the top one clipped away
+   and wiped in on hover. Transitioning colours separately can never
+   land together the way one clip does — label, icon and background
+   all change on a single edge.
+   ========================================================= */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:14px 22px;border-radius:999px;border:1px solid transparent;
-  font:600 15px/1 var(--body);letter-spacing:.01em;
-  text-decoration:none;cursor:pointer;white-space:nowrap;
-  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .12s ease;
+  position:relative;display:inline-flex;overflow:hidden;
+  border-radius:3px;text-decoration:none;cursor:pointer;
+  border:1px solid transparent;isolation:isolate;
+  transition:transform 120ms var(--out), border-color 200ms ease;
 }
-.btn svg{width:17px;height:17px;flex:none;}
-.btn-1{background:var(--brass);color:#17130A;}
-.btn-1:hover{background:var(--brass-2);}
-.btn-2{background:transparent;color:var(--cream);border-color:var(--line);}
-.btn-2:hover{border-color:var(--cream-2);}
-.btn:active{transform:translateY(1px);}
+.btn-face{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:15px 26px;white-space:nowrap;
+  font:600 13.5px/1 var(--display);letter-spacing:.13em;text-transform:uppercase;
+}
+.btn-face svg{width:15px;height:15px;flex:none;
+  transition:transform 280ms var(--out);}
+.btn-fill{
+  position:absolute;inset:0;
+  clip-path:inset(100% 0 0 0);
+  transition:clip-path 420ms var(--out);
+}
+/* Press feedback is instant and lives on the press, not on release. */
+.btn:active{transform:scale(.97);}
 
-/* ---------- header ---------- */
+.btn-1{background:var(--brass);color:#14100A;}
+.btn-1 .btn-fill{background:var(--cream);color:#14100A;}
+.btn-2{background:rgba(10,11,12,.4);color:var(--cream);border-color:rgba(246,242,234,.28);
+  backdrop-filter:blur(4px);}
+.btn-2 .btn-fill{background:var(--cream);color:#14100A;}
+
+@media (hover:hover) and (pointer:fine){
+  .btn:hover .btn-fill{clip-path:inset(0 0 0 0);}
+  .btn:hover .btn-face svg{transform:translateX(4px);}
+  .btn-2:hover{border-color:var(--cream);}
+}
+
+/* =========================================================
+   LOADING SCREEN
+
+   Seen once a visit, and it is doing a job rather than stalling:
+   it covers the moment before the hero photograph has decoded, so
+   nobody meets this page as an empty dark rectangle. It lifts as
+   soon as that image is ready, and a failsafe timer lifts it
+   regardless — a slow photograph must never hold the page hostage.
+   ========================================================= */
+.boot{
+  position:fixed;inset:0;z-index:200;background:var(--ink);
+  display:grid;place-items:center;
+  transition:transform 640ms var(--in-out), opacity 300ms ease 260ms;
+  will-change:transform;
+}
+.boot.gone{transform:translateY(-101%);opacity:0;pointer-events:none;}
+.boot-mark{
+  font:700 clamp(34px,7vw,62px)/1 var(--display);letter-spacing:.02em;
+  display:flex;gap:.28em;overflow:hidden;padding-bottom:.08em;
+}
+.boot-mark span{display:block;transform:translateY(110%);
+  animation:bootUp 620ms var(--out) forwards;}
+.boot-mark .n{color:var(--brass);animation-delay:90ms;}
+@keyframes bootUp{ to{transform:translateY(0);} }
+.boot-bar{
+  width:min(210px,42vw);height:2px;margin-top:26px;
+  background:rgba(246,242,234,.13);overflow:hidden;
+}
+.boot-bar i{
+  display:block;height:100%;background:var(--brass);
+  transform:scaleX(0);transform-origin:left;
+  animation:bootBar 1400ms linear forwards;
+}
+@keyframes bootBar{ to{transform:scaleX(1);} }
+
+/* =========================================================
+   HEADER — a translucent layer the page scrolls under, not an
+   opaque strip that eats a fixed band of the screen.
+   ========================================================= */
 header{
-  position:sticky;top:0;z-index:60;
-  background:color-mix(in srgb,var(--ink) 88%,transparent);
-  backdrop-filter:saturate(150%) blur(12px);
-  border-bottom:1px solid var(--line-2);
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,11,12,.62);
+  backdrop-filter:saturate(170%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:background 300ms ease, border-color 300ms ease;
   padding-top:env(safe-area-inset-top);
 }
-.hd{display:flex;align-items:center;gap:14px;height:64px;}
+header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
+/* Reading progress. scaleX only, so it never costs a layout. */
+.progress{
+  position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:var(--brass);transform:scaleX(0);transform-origin:left;
+  will-change:transform;
+}
+.hd{display:flex;align-items:center;gap:14px;height:66px;}
 .lockup{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;}
-.lockup img{width:32px;height:32px;border-radius:8px;}
-.lockup b{
-  font:700 19px/1 var(--display);letter-spacing:.055em;text-transform:uppercase;
-}
+.lockup img{width:32px;height:32px;object-fit:contain;}
+.lockup b{font:700 19px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;}
 .lockup b i{font-style:normal;color:var(--brass);}
-.hd nav{display:flex;gap:24px;}
+.hd nav{display:flex;gap:26px;}
 .hd nav a{
-  font:500 13.5px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;
-  color:var(--cream-2);text-decoration:none;
+  position:relative;font:500 12.5px/1 var(--body);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cream-2);text-decoration:none;padding:4px 0;
 }
-.hd nav a:hover{color:var(--brass);}
-.hd .btn{padding:10px 17px;font-size:14px;}
-@media (max-width:900px){ .hd nav{display:none;} }
-@media (max-width:420px){ .hd .btn span{display:none;} .hd .btn{padding:10px 13px;} }
+/* The underline grows from the side the pointer arrived on rather than
+   appearing whole. */
+.hd nav a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--brass);transform:scaleX(0);transform-origin:right;
+  transition:transform 260ms var(--out);
+}
+@media (hover:hover) and (pointer:fine){
+  .hd nav a:hover{color:var(--cream);}
+  .hd nav a:hover::after{transform:scaleX(1);transform-origin:left;}
+}
+@media (max-width:980px){ .hd nav{display:none;} }
+@media (max-width:430px){ .hd .btn-face{padding:12px 15px;} .hd .btn-face span{display:none;} }
+.hd .btn-face{padding:12px 19px;font-size:12.5px;}
 
 .lang{
   background:transparent;border:1px solid var(--line);color:var(--cream-2);
-  border-radius:999px;padding:8px 13px;cursor:pointer;
-  font:600 12px/1 var(--body);letter-spacing:.09em;
+  border-radius:3px;padding:9px 13px;cursor:pointer;
+  font:600 11.5px/1 var(--body);letter-spacing:.12em;
+  transition:border-color 200ms ease, color 200ms ease, transform 120ms var(--out);
 }
-.lang:hover{border-color:var(--cream-2);color:var(--cream);}
+.lang:active{transform:scale(.96);}
+@media (hover:hover) and (pointer:fine){
+  .lang:hover{border-color:var(--brass);color:var(--brass);}
+}
 
-/* ---------- hero ---------- */
-/* A photograph of the actual shop, which does more for a barbershop than any
-   amount of type. The text sits on a scrim rather than straight on the
-   picture: the lamp at the left edge is the brightest thing in the frame and
-   the headline lands right on top of it. */
+/* =========================================================
+   HERO
+   ========================================================= */
 .hero{
   position:relative;overflow:hidden;
   display:flex;align-items:flex-end;
-  min-height:min(84vh,780px);
+  min-height:min(88vh,860px);
   padding-top:clamp(56px,10vw,120px);
-  padding-bottom:clamp(40px,6vw,76px);
+  padding-bottom:clamp(44px,6vw,84px);
 }
-.hero-bg{position:absolute;inset:0;}
+.hero-bg{position:absolute;inset:-6% 0;}
 .hero-bg img{
   width:100%;height:100%;object-fit:cover;
   /* Favours the chairs. A phone crops this hard enough to lose them
      altogether if it is left centred on the sofa. */
   object-position:64% 50%;
+  will-change:transform;
 }
 .hero-bg::after{
   content:'';position:absolute;inset:0;
   background:
-    linear-gradient(103deg, rgba(9,9,11,.95) 0%, rgba(9,9,11,.86) 30%,
-                            rgba(9,9,11,.46) 64%, rgba(9,9,11,.34) 100%),
-    linear-gradient(to top, #0C0C0E 0%, rgba(12,12,14,.22) 34%, rgba(12,12,14,0) 62%);
+    linear-gradient(103deg, rgba(8,9,10,.95) 0%, rgba(8,9,10,.86) 30%,
+                            rgba(8,9,10,.44) 64%, rgba(8,9,10,.32) 100%),
+    linear-gradient(to top, #0A0B0C 0%, rgba(10,11,12,.2) 34%, rgba(10,11,12,0) 62%);
 }
 .hero-inner{position:relative;z-index:1;width:100%;}
-.hero h1{margin:16px 0 0;}
-.hero h1 em{font-style:normal;color:var(--brass);display:block;}
-.hero .lede{margin-top:20px;max-width:32em;}
-.hero-cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px;}
-/* An outline button on a photograph needs more than the 10% hairline the
-   cards use, and something behind it for the stretch of picture it crosses. */
-.hero .btn-2{
-  border-color:rgba(246,242,234,.34);background:rgba(10,10,12,.34);
-  backdrop-filter:blur(3px);
-}
-.hero .btn-2:hover{border-color:var(--cream);background:rgba(10,10,12,.5);}
-@media (max-width:760px){
-  .hero{min-height:min(88vh,640px);}
-  /* Stacked on a phone the text sits at the bottom, so the weight of the
-     scrim moves there with it. */
-  .hero-bg::after{
-    background:
-      linear-gradient(to top, #0C0C0E 3%, rgba(12,12,14,.60) 48%, rgba(12,12,14,.30) 100%),
-      linear-gradient(103deg, rgba(9,9,11,.70) 0%, rgba(9,9,11,.38) 100%);
-  }
-}
+.hero h1{margin:18px 0 0;}
+/* Each line rides up out of its own clipped box. */
+.line{display:block;overflow:hidden;padding-bottom:.04em;}
+.line > span{display:block;transform:translateY(105%);}
+.ready .line > span{transform:translateY(0);
+  transition:transform 780ms var(--out) var(--d,0ms);}
+.hero h1 em{font-style:normal;color:var(--brass);}
+.hero .lede{margin-top:22px;max-width:31em;}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;}
 
-/* ---------- open / closed badge ---------- */
+/* Everything under the headline arrives a beat later, in order. */
+.rise{opacity:0;transform:translateY(14px);}
+.ready .rise{opacity:1;transform:none;
+  transition:opacity 620ms var(--out) var(--d,0ms), transform 620ms var(--out) var(--d,0ms);}
+
 .status{
   display:inline-flex;align-items:center;gap:10px;
-  padding:9px 16px 9px 13px;border-radius:999px;
-  border:1px solid var(--line);background:var(--ink-2);
+  padding:10px 17px 10px 14px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(16,18,20,.82);
+  backdrop-filter:blur(6px);
   font:500 14px/1 var(--body);color:var(--cream-2);
 }
-.status .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none;}
-.status.open .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(91,190,126,.16);}
-.status.soon .dot{background:var(--brass);box-shadow:0 0 0 4px rgba(200,160,70,.16);}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;}
+.status.open .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(91,190,126,.15);}
+.status.soon .dot{background:var(--brass);box-shadow:0 0 0 4px rgba(200,160,70,.15);}
 .status b{color:var(--cream);font-weight:600;}
 
-/* ---------- cards ---------- */
-.grid{display:grid;gap:14px;}
+/* =========================================================
+   TICKER — constant motion, so linear. Nothing else on the page
+   loops; this is the one thing allowed to just run.
+   ========================================================= */
+.ticker{
+  background:var(--brass);color:#14100A;overflow:hidden;
+  padding:13px 0;border-block:1px solid rgba(0,0,0,.18);
+}
+.ticker-track{display:flex;width:max-content;animation:slide 34s linear infinite;}
+.ticker-track span{
+  font:600 13px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;
+  padding-right:30px;white-space:nowrap;
+}
+@keyframes slide{ to{transform:translateX(-50%);} }
+
+/* =========================================================
+   STEPS AND CARDS
+   ========================================================= */
+.grid{display:grid;gap:16px;}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr));}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr));}
-@media (max-width:860px){ .g4{grid-template-columns:1fr 1fr;} }
-@media (max-width:640px){ .g3,.g4{grid-template-columns:1fr;} }
+@media (max-width:900px){ .g4{grid-template-columns:1fr 1fr;} }
+@media (max-width:660px){ .g3,.g4{grid-template-columns:1fr;} }
+
+.step{position:relative;padding-top:22px;border-top:1px solid var(--line);}
+.step .n{
+  position:absolute;top:-.62em;right:0;
+  font:700 clamp(40px,5vw,62px)/1 var(--display);letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px rgba(200,160,70,.34);
+}
+.step h3{margin-bottom:10px;}
+.step p{color:var(--muted);font-size:15px;}
 
 .card{
-  background:var(--ink-2);border:1px solid var(--line-2);border-radius:var(--r);
-  padding:24px 22px;
+  background:var(--ink-2);border:1px solid var(--line-2);border-radius:4px;
+  padding:26px 24px;
 }
-.card h3{margin-bottom:9px;}
-.card p{color:var(--muted);font-size:15px;line-height:1.6;}
+.card h3{margin-bottom:10px;}
+.card p{color:var(--muted);font-size:15px;}
 .ic{
-  width:38px;height:38px;border-radius:10px;margin-bottom:16px;
+  width:40px;height:40px;border-radius:4px;margin-bottom:18px;
   display:grid;place-items:center;
-  background:rgba(200,160,70,.13);color:var(--brass);
+  background:rgba(200,160,70,.12);color:var(--brass);
 }
 .ic svg{width:20px;height:20px;}
 
-/* numbered steps */
-.step{position:relative;padding-top:8px;}
-.step .n{
-  font:700 15px/1 var(--display);letter-spacing:.08em;color:var(--brass);
-  display:block;margin-bottom:14px;
-}
-.step .n::after{content:'';display:block;height:1px;background:var(--line);margin-top:12px;}
+/* the green band is the shop's own wall */
+.onwall{background:var(--green);border-block:1px solid rgba(0,0,0,.35);}
+.onwall .card{background:rgba(0,0,0,.2);border-color:rgba(246,242,234,.08);}
+.onwall .card p{color:rgba(246,242,234,.7);}
+.onwall .ic{background:rgba(226,190,107,.14);}
+.onwall .eyebrow{color:var(--brass-2);}
 
-/* ---------- price list ---------- */
+/* =========================================================
+   PRICE LIST
+   ========================================================= */
 .prices{border-top:1px solid var(--line);}
 .row{
-  display:flex;align-items:baseline;gap:10px;
-  padding:17px 2px;border-bottom:1px solid var(--line-2);
+  position:relative;display:flex;align-items:baseline;gap:12px;
+  padding:18px 2px;border-bottom:1px solid var(--line-2);
 }
-.row .nm{font-weight:500;font-size:16.5px;}
+/* A hairline that draws itself under the row being read. */
+.row::after{
+  content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:var(--brass);transform:scaleX(0);transform-origin:left;
+  transition:transform 380ms var(--out);
+}
+.row .nm{font-weight:500;font-size:17px;}
 .row .mins{
-  font:500 12.5px/1 var(--body);color:var(--muted);letter-spacing:.04em;
-  border:1px solid var(--line);border-radius:999px;padding:5px 9px;flex:none;
+  font:500 12px/1 var(--body);color:var(--muted);letter-spacing:.06em;
+  border:1px solid var(--line);border-radius:999px;padding:5px 10px;flex:none;
 }
 .row .dots{flex:1;border-bottom:1px dotted rgba(246,242,234,.2);min-width:14px;
   transform:translateY(-4px);}
-.row .amt{font:600 18px/1 var(--display);letter-spacing:.03em;color:var(--brass);flex:none;}
-@media (max-width:520px){
+.row .amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--brass);flex:none;
+  transition:transform 380ms var(--out);}
+@media (hover:hover) and (pointer:fine){
+  .row:hover::after{transform:scaleX(1);}
+  .row:hover .amt{transform:translateX(-3px);}
+}
+@media (max-width:540px){
   .row{flex-wrap:wrap;}
   .row .nm{width:100%;}
   .row .mins{order:1;} .row .dots{order:2;} .row .amt{order:3;}
 }
-.price-note{margin-top:20px;}
 
-/* ---------- gallery ---------- */
-.tiles{display:grid;gap:10px;grid-template-columns:repeat(4,1fr);}
+/* =========================================================
+   GALLERY — tiles uncover from the bottom rather than fading, and
+   the photograph inside settles back from a slight push, so the
+   picture arrives rather than switching on.
+   ========================================================= */
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(4,1fr);}
+@media (max-width:760px){ .tiles{grid-template-columns:1fr 1fr;} }
 .tile{
-  margin:0;position:relative;aspect-ratio:1;border-radius:var(--r-s);overflow:hidden;
-  background:var(--ink-2);border:1px solid var(--line-2);
+  position:relative;overflow:hidden;border-radius:4px;aspect-ratio:3/4;
+  background:var(--ink-2);margin:0;
+  clip-path:inset(0 0 100% 0);
 }
-.tile:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:1;}
-.tile img{width:100%;height:100%;object-fit:cover;}
-/* No photo yet: a drawn panel rather than a broken-image icon. */
-.tile-empty::before{
-  content:'';position:absolute;inset:0;opacity:.22;
-  background:repeating-linear-gradient(-58deg,
-    rgba(192,57,46,.9) 0 6px, transparent 6px 22px,
-    rgba(200,160,70,.9) 22px 28px, transparent 28px 44px);
+.tile.in{clip-path:inset(0 0 0 0);transition:clip-path 880ms var(--in-out) var(--d,0ms);}
+.tile img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.1);
+  transition:transform 1100ms var(--out) var(--d,0ms);
 }
-.tile-empty::after{
-  content:'33';position:absolute;inset:0;display:grid;place-items:center;
-  font:700 clamp(20px,4vw,34px)/1 var(--display);letter-spacing:.08em;
-  color:rgba(246,242,234,.22);
-}
-@media (max-width:640px){
-  .tiles{grid-template-columns:repeat(2,1fr);}
-  .tile:first-child{grid-column:span 2;grid-row:auto;aspect-ratio:16/10;}
+.tile.in img{transform:scale(1);}
+@media (hover:hover) and (pointer:fine){
+  .tile.in:hover img{transform:scale(1.045);transition:transform 600ms var(--out);}
 }
 
-/* ---------- hours ---------- */
+/* =========================================================
+   HOURS, FIND US
+   ========================================================= */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+/* A 1fr track is floored at its content's min-content width, and the button
+   labels below are nowrap — without this the cards refused to go narrower
+   than their widest button and pushed a 320px screen sideways. */
+.two > *,.grid > *{min-width:0;}
+@media (max-width:800px){ .two{grid-template-columns:1fr;} }
 .hours{width:100%;border-collapse:collapse;}
 .hours th{
-  text-align:left;font:600 12px/1 var(--body);letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);padding:0 0 12px;font-weight:600;
+  text-align:left;font:600 11.5px/1 var(--body);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);padding:0 0 14px;
 }
-.hours td{padding:13px 0;border-top:1px solid var(--line-2);font-size:16px;}
+.hours td{padding:14px 0;border-top:1px solid var(--line-2);font-size:16px;}
 .hours td:last-child{text-align:right;color:var(--cream-2);font-variant-numeric:tabular-nums;}
 .hours tr.today td{color:var(--cream);font-weight:600;}
-.hours tr.today td:first-child{position:relative;padding-left:16px;}
+.hours tr.today td:first-child{position:relative;padding-left:17px;}
 .hours tr.today td:first-child::before{
   content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
   width:6px;height:6px;border-radius:50%;background:var(--brass);
 }
 .hours td.shut{color:var(--muted);}
 
-/* ---------- find us ---------- */
-.find{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-@media (max-width:760px){ .find{grid-template-columns:1fr;} }
 .addr{font-size:17px;line-height:1.75;color:var(--cream-2);}
-.addr strong{display:block;font:600 17px/1.3 var(--display);letter-spacing:.05em;
-  text-transform:uppercase;margin-bottom:8px;color:var(--cream);}
-.find .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+.addr strong{display:block;font:600 18px/1.3 var(--display);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:9px;color:var(--cream);}
+.btns{display:flex;flex-wrap:wrap;gap:11px;margin-top:24px;}
+@media (max-width:430px){
+  .btns{flex-direction:column;align-items:stretch;}
+  .btns .btn-face{width:100%;}
+}
+.fill{color:var(--brass);border-bottom:1px dashed var(--brass);opacity:.88;font-style:normal;}
+.fill::after{content:' ?';font-size:.8em;vertical-align:super;}
 
-/* contact rows */
-.clist{display:grid;gap:2px;margin-top:4px;}
 .crow{
-  display:flex;align-items:center;gap:14px;padding:15px 2px;
+  display:flex;align-items:center;gap:15px;padding:16px 2px;
   border-bottom:1px solid var(--line-2);text-decoration:none;
 }
 .crow:last-child{border-bottom:0;}
-.crow .ic{margin:0;width:34px;height:34px;}
+.crow .ic{margin:0;width:36px;height:36px;}
 .crow .meta{flex:1;min-width:0;}
-.crow .lbl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  display:block;font-weight:600;margin-bottom:2px;}
-.crow b{font-weight:500;font-size:16.5px;display:block;}
-.crow:hover b{color:var(--brass);}
+.crow .lbl{display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:3px;}
+.crow b{display:block;font-weight:500;font-size:16.5px;transition:color 200ms ease;}
+@media (hover:hover) and (pointer:fine){ .crow:hover b{color:var(--brass);} }
 
-/* ---------- footer ---------- */
-footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
-.ft{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;
+footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
+.ft{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;
   font-size:13.5px;color:var(--muted);}
 .ft .sp{margin-left:auto;}
 
 /* ---------- the phone's call bar ---------- */
-/* Two things a walk-in customer wants at 10am on a Saturday: the number and
-   the way there. On a phone they follow the page down instead of being left
-   at the top of it. */
 .callbar{
-  position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;gap:9px;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:color-mix(in srgb,var(--ink) 94%,transparent);
-  backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  position:fixed;left:0;right:0;bottom:0;z-index:90;display:none;gap:10px;
+  padding:11px 14px calc(11px + env(safe-area-inset-bottom));
+  background:rgba(10,11,12,.93);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
 }
-.callbar .btn{flex:1;padding:14px 10px;}
-@media (max-width:760px){ .callbar{display:flex;} }
+.callbar .btn{flex:1;}
+.callbar .btn-face{width:100%;padding:15px 8px;}
+@media (max-width:800px){ .callbar{display:flex;} }
+
+/* ---------- scroll reveals ---------- */
+[data-reveal]{opacity:0;transform:translateY(18px);}
+[data-reveal].in{opacity:1;transform:none;
+  transition:opacity 700ms var(--out) var(--d,0ms), transform 700ms var(--out) var(--d,0ms);}
+
+/* =========================================================
+   REDUCED MOTION
+
+   Not "no feedback" — gentler feedback. Everything that travels
+   through space stops travelling; the opacity changes that explain
+   what arrived when are kept, and shortened.
+   ========================================================= */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .ticker-track{animation:none;}
+  .boot-mark span,.boot-bar i{animation:none;transform:none;}
+  .boot{transition:opacity 200ms ease;}
+  .boot.gone{transform:none;opacity:0;}
+  .line > span{transform:none;}
+  .ready .line > span{transition:none;}
+  .rise,[data-reveal]{transform:none;}
+  .ready .rise,[data-reveal].in{transition:opacity 260ms ease var(--d,0ms);transform:none;}
+  .tile{clip-path:none;opacity:0;}
+  .tile.in{opacity:1;transition:opacity 300ms ease;}
+  .tile img,.tile.in img{transform:none;transition:none;}
+  .btn-fill{transition:opacity 160ms ease;clip-path:none;opacity:0;}
+  .btn:hover .btn-fill{opacity:1;}
+  .hero-bg img{transform:none !important;}
+}
+@media (prefers-reduced-transparency:reduce){
+  header,header.stuck{background:var(--ink);backdrop-filter:none;}
+  .callbar{background:var(--ink);backdrop-filter:none;}
+  .btn-2{backdrop-filter:none;}
+  .status{backdrop-filter:none;background:var(--ink-2);}
+}
 </style>
 </head>
 <body>
 
-<header>
+<div class="boot" id="boot">
+  <!-- FILL: logo — swap this wordmark for the real mark once the file is in.
+       <img src="assets/logo.svg" alt="" width="96" height="96"> -->
+  <div class="boot-mark"><span>BARBER</span><span class="n">33</span></div>
+  <div class="boot-bar"><i></i></div>
+</div>
+<noscript><style>#boot{display:none;}.rise,[data-reveal]{opacity:1;transform:none;}
+.line > span{transform:none;}.tile{clip-path:none;}.tile img{transform:none;}</style></noscript>
+
+<header id="hdr">
   <div class="wrap hd">
     <a class="lockup" href="#top" aria-label="Barber 33">
-      <img src="icons/icon-192.png" alt="" width="32" height="32">
+      <!-- FILL: logo — <img src="assets/logo.svg" alt="" width="32" height="32"> -->
       <b>Barber&nbsp;<i>33</i></b>
     </a>
     <nav>
       <a href="#kako" data-en="How it works">Kako to ide</a>
       <a href="#cjenik" data-en="Prices">Cjenik</a>
+      <a href="#galerija" data-en="Work">Radovi</a>
       <a href="#vrijeme" data-en="Hours">Radno vrijeme</a>
       <a href="#gdje" data-en="Find us">Gdje smo</a>
     </nav>
     <button class="lang" id="langBtn" type="button" aria-label="Switch to English">EN</button>
     <a class="btn btn-1" data-shop="call" href="#kontakt">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-      <span data-en="Call">Nazovi</span>
+      <span class="btn-face">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+        <span data-en="Call">Nazovi</span>
+      </span>
+      <span class="btn-face btn-fill" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+        <span data-en="Call">Nazovi</span>
+      </span>
     </a>
   </div>
+  <span class="progress" id="prog" aria-hidden="true"></span>
 </header>
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="top">
   <div class="hero-bg" aria-hidden="true">
-    <img src="assets/hero-1400.jpg"
+    <img id="heroImg" src="assets/hero-1400.jpg"
          srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
          sizes="100vw" width="2000" height="1493" alt=""
          fetchpriority="high" decoding="async">
   </div>
   <div class="wrap hero-inner">
-    <div>
-      <span class="eyebrow" data-en="Barbershop · Poreč">Barbershop · Poreč</span>
-      <h1><span data-en="No appointments.">Bez naručivanja.</span><em data-en="Just walk in.">Samo uđi.</em></h1>
-      <p class="lede" data-en="Barber 33 is a walk-in barbershop in Poreč. No calendar, no appointments — first come, first served. You come in, you sit down, you leave sharp.">
-        Barber 33 je walk-in barbershop u Poreču. Nema kalendara ni termina — radimo po redu
-        dolaska. Dođeš, sjedneš, izađeš ošišan.
-      </p>
+    <span class="eyebrow rise" style="--d:340ms" data-en="Barbershop · Poreč">Barbershop · Poreč</span>
+    <h1>
+      <span class="line" style="--d:80ms"><span data-en="No appointments.">Bez naručivanja.</span></span>
+      <span class="line" style="--d:180ms"><em><span data-en="Just walk in.">Samo uđi.</span></em></span>
+    </h1>
+    <p class="lede rise" style="--d:420ms" data-en="Barber 33 is a walk-in barbershop in Poreč. No calendar, no appointments — first come, first served. You come in, you sit down, you leave sharp.">
+      Barber 33 je walk-in barbershop u Poreču. Nema kalendara ni termina — radimo po redu
+      dolaska. Dođeš, sjedneš, izađeš ošišan.
+    </p>
 
-      <div class="hero-cta">
-        <a class="btn btn-1" data-shop="call" href="#kontakt">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+    <div class="hero-cta rise" style="--d:500ms">
+      <a class="btn btn-1" data-shop="call" href="#kontakt">
+        <span class="btn-face">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
           <span data-en="Call the shop">Nazovi salon</span>
-        </a>
-        <a class="btn btn-2" data-shop="map" href="#gdje">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-          <span data-en="Directions">Upute do salona</span>
-        </a>
-      </div>
-
-      <p style="margin-top:26px">
-        <span class="status" id="status" role="status">
-          <span class="dot" aria-hidden="true"></span>
-          <span id="statusTxt">Radno vrijeme</span>
         </span>
-      </p>
+        <span class="btn-face btn-fill" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+          <span data-en="Call the shop">Nazovi salon</span>
+        </span>
+      </a>
+      <a class="btn btn-2" data-shop="map" href="#gdje">
+        <span class="btn-face">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <span data-en="Directions">Upute do salona</span>
+        </span>
+        <span class="btn-face btn-fill" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <span data-en="Directions">Upute do salona</span>
+        </span>
+      </a>
     </div>
+
+    <p class="rise" style="--d:580ms;margin-top:30px">
+      <span class="status" id="status" role="status">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="statusTxt">Radno vrijeme</span>
+      </span>
+    </p>
   </div>
 </section>
 
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tick"></div>
+</div>
+
 <!-- ===================== HOW IT WORKS ===================== -->
-<section id="kako" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
+<section id="kako">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" data-reveal>
+      <span class="idx">01</span>
       <span class="eyebrow" data-en="How it works">Kako to ide</span>
       <h2 data-en="Three steps, and none of them is an app.">Tri koraka, i nijedan nije aplikacija.</h2>
       <p class="lede" data-en="Booking systems suit a shop that runs on appointments. This one runs on whoever walks through the door.">
@@ -468,24 +670,24 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
       </p>
     </div>
     <div class="grid g3">
-      <div class="step">
-        <span class="n" data-en="Step 01">Korak 01</span>
+      <div class="step" data-reveal style="--d:0ms">
+        <span class="n" aria-hidden="true">01</span>
         <h3 data-en="Come when it suits you">Dođi kad ti paše</h3>
         <p data-en="No booking and nothing to install. Check the hours, walk in and say hello. First come, first served — always.">
           Bez naručivanja i bez instaliranja ičega. Provjeri radno vrijeme, uđi i javi se.
           Po redu dolaska — uvijek.
         </p>
       </div>
-      <div class="step">
-        <span class="n" data-en="Step 02">Korak 02</span>
+      <div class="step" data-reveal style="--d:80ms">
+        <span class="n" aria-hidden="true">02</span>
         <h3 data-en="Take a seat">Sjedni i pričekaj</h3>
         <p data-en="If the chairs are full, tell us what you need and sit down. We'll tell you roughly how long it is before you decide to stay.">
           Ako su stolci puni, reci nam što trebaš i sjedni. Reći ćemo ti otprilike koliko
           se čeka prije nego što odlučiš ostati.
         </p>
       </div>
-      <div class="step">
-        <span class="n" data-en="Step 03">Korak 03</span>
+      <div class="step" data-reveal style="--d:160ms">
+        <span class="n" aria-hidden="true">03</span>
         <h3 data-en="Out in half an hour">Gotovo za pola sata</h3>
         <p data-en="Most cuts take about thirty minutes. Card or cash, whichever you have on you.">
           Većina šišanja traje tridesetak minuta. Karticom ili gotovinom, kako ti je lakše.
@@ -496,9 +698,10 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 </section>
 
 <!-- ===================== PRICES ===================== -->
-<section id="cjenik">
+<section id="cjenik" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" data-reveal>
+      <span class="idx">02</span>
       <span class="eyebrow" data-en="Prices">Cjenik</span>
       <h2 data-en="The price is the price.">Cijena je cijena.</h2>
       <p class="lede" data-en="No surcharge for a fade, a wash or styling, and the beard line and neck are part of a cut rather than an extra.">
@@ -509,75 +712,76 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 
     <!-- FILL: prices and durations for the shop to confirm. -->
     <div class="prices">
-      <div class="row">
+      <div class="row" data-reveal style="--d:0ms">
         <span class="nm" data-en="Haircut">Šišanje</span>
         <span class="mins">30 min</span><span class="dots"></span><span class="amt">15 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:45ms">
         <span class="nm" data-en="Cut, wash &amp; style">Šišanje, pranje i styling</span>
         <span class="mins">40 min</span><span class="dots"></span><span class="amt">18 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:90ms">
         <span class="nm" data-en="Skin fade">Fade</span>
         <span class="mins">40 min</span><span class="dots"></span><span class="amt">18 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:135ms">
         <span class="nm" data-en="Haircut + beard">Šišanje i brada</span>
         <span class="mins">50 min</span><span class="dots"></span><span class="amt">22 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:180ms">
         <span class="nm" data-en="Beard trim &amp; shape">Oblikovanje brade</span>
         <span class="mins">20 min</span><span class="dots"></span><span class="amt">10 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:225ms">
         <span class="nm" data-en="Hot-towel razor shave">Klasično brijanje britvom</span>
         <span class="mins">30 min</span><span class="dots"></span><span class="amt">15 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:270ms">
         <span class="nm" data-en="Head shave">Brijanje glave</span>
         <span class="mins">25 min</span><span class="dots"></span><span class="amt">13 €</span>
       </div>
-      <div class="row">
+      <div class="row" data-reveal style="--d:315ms">
         <span class="nm" data-en="Kids' cut (under 12)">Dječje šišanje (do 12 g.)</span>
         <span class="mins">25 min</span><span class="dots"></span><span class="amt">12 €</span>
       </div>
     </div>
-    <p class="muted price-note" data-en="Cash and cards both fine. Times are how long the chair is yours, not how long you wait.">
+    <p class="muted" style="margin-top:22px" data-reveal data-en="Cash and cards both fine. Times are how long the chair is yours, not how long you wait.">
       Gotovina i kartice. Vrijeme uz uslugu je koliko je stolac tvoj, a ne koliko se čeka.
     </p>
   </div>
 </section>
 
 <!-- ===================== WHAT WE DO ===================== -->
-<section style="background:var(--ink-2);border-block:1px solid var(--line-2)">
+<section class="onwall">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" data-reveal>
+      <span class="idx">03</span>
       <span class="eyebrow" data-en="What we do">Što radimo</span>
       <h2 data-en="Classic work, done properly.">Klasičan zanat, odrađen kako treba.</h2>
     </div>
     <div class="grid g4">
-      <div class="card">
+      <div class="card" data-reveal style="--d:0ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div>
         <h3 data-en="Classic and fade">Klasika i fade</h3>
         <p data-en="From a tidy classic cut to a skin fade. Tell us the number or show us a photo — both work.">
           Od uredne klasike do skin fadea. Reci broj ili pokaži sliku — oboje radi.
         </p>
       </div>
-      <div class="card">
+      <div class="card" data-reveal style="--d:70ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h10l8 5-8 5H3z"/><path d="M13 7v10"/></svg></div>
         <h3 data-en="Straight razor, hot towel">Britva i vrući ručnik</h3>
         <p data-en="Shaves and beard shaping the old way: hot towel, a proper lather and balm after.">
           Brijanje i oblikovanje brade po starinski: vrući ručnik, prava pjena i balzam poslije.
         </p>
       </div>
-      <div class="card">
+      <div class="card" data-reveal style="--d:140ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.4 0 7 2.6 7 6.5 0 4.6-3 11.5-7 11.5S5 14.1 5 9.5C5 5.6 7.6 3 12 3z"/><path d="M9 9h.01M15 9h.01"/></svg></div>
         <h3 data-en="Beard and detail">Brada i detalji</h3>
         <p data-en="Beard line, neck and sideburns are part of the cut — they are not charged separately.">
           Linija brade, vrat i zalisci dio su šišanja — ne naplaćuju se posebno.
         </p>
       </div>
-      <div class="card">
+      <div class="card" data-reveal style="--d:210ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg></div>
         <!-- FILL: confirm which languages the chair actually speaks. -->
         <h3 data-en="Croatian and English">Hrvatski i engleski</h3>
@@ -590,21 +794,34 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 </section>
 
 <!-- ===================== GALLERY ===================== -->
-<!-- Photos go in assets/ as shop-1.jpg … shop-5.jpg. A tile with no file
-     behind it falls back to a drawn panel, so the row never shows a broken
-     image while the shop is still taking pictures. -->
-<section>
+<section id="galerija">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow" data-en="Inside the shop">U salonu</span>
-      <h2 data-en="Come and see for yourself.">Dođi i pogledaj.</h2>
+    <div class="sec-head" data-reveal>
+      <span class="idx">04</span>
+      <span class="eyebrow" data-en="The work">Radovi</span>
+      <h2 data-en="Cuts that left this chair.">Šišanja iz ovog stolca.</h2>
     </div>
-    <div class="tiles">
-      <figure class="tile"><img src="assets/shop-1.jpg" alt="Barber 33, Poreč" loading="lazy" onerror="this.parentNode.classList.add('tile-empty');this.remove();"></figure>
-      <figure class="tile"><img src="assets/shop-2.jpg" alt="" loading="lazy" onerror="this.parentNode.classList.add('tile-empty');this.remove();"></figure>
-      <figure class="tile"><img src="assets/shop-3.jpg" alt="" loading="lazy" onerror="this.parentNode.classList.add('tile-empty');this.remove();"></figure>
-      <figure class="tile"><img src="assets/shop-4.jpg" alt="" loading="lazy" onerror="this.parentNode.classList.add('tile-empty');this.remove();"></figure>
-      <figure class="tile"><img src="assets/shop-5.jpg" alt="" loading="lazy" onerror="this.parentNode.classList.add('tile-empty');this.remove();"></figure>
+    <div class="tiles" data-reveal-group>
+      <figure class="tile" style="--d:0ms">
+        <img src="assets/work-1-560.jpg" srcset="assets/work-1-560.jpg 560w, assets/work-1-900.jpg 900w"
+             sizes="(max-width:760px) 50vw, 25vw" width="900" height="1200" loading="lazy" decoding="async"
+             alt="Teksturirano šišanje s niskim fadeom">
+      </figure>
+      <figure class="tile" style="--d:90ms">
+        <img src="assets/work-2-560.jpg" srcset="assets/work-2-560.jpg 560w, assets/work-2-900.jpg 900w"
+             sizes="(max-width:760px) 50vw, 25vw" width="900" height="1200" loading="lazy" decoding="async"
+             alt="Fade s plavo obojanim vrhom">
+      </figure>
+      <figure class="tile" style="--d:180ms">
+        <img src="assets/work-3-560.jpg" srcset="assets/work-3-560.jpg 560w, assets/work-3-900.jpg 900w"
+             sizes="(max-width:760px) 50vw, 25vw" width="900" height="1200" loading="lazy" decoding="async"
+             alt="Visoki fade s izbrijanom linijom i oblikovanom bradom">
+      </figure>
+      <figure class="tile" style="--d:270ms">
+        <img src="assets/work-4-560.jpg" srcset="assets/work-4-560.jpg 560w, assets/work-4-900.jpg 900w"
+             sizes="(max-width:760px) 50vw, 25vw" width="900" height="1200" loading="lazy" decoding="async"
+             alt="Klasično šišanje s izbrijanom linijom">
+      </figure>
     </div>
   </div>
 </section>
@@ -615,18 +832,16 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
      wrong here is wrong twice. -->
 <section id="vrijeme" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" data-reveal>
+      <span class="idx">05</span>
       <span class="eyebrow" data-en="Opening hours">Radno vrijeme</span>
       <h2 data-en="When the door is open.">Kad su vrata otvorena.</h2>
     </div>
-    <div class="find">
-      <div>
+    <div class="two">
+      <div data-reveal>
         <table class="hours">
           <thead>
-            <tr>
-              <th data-en="Day">Dan</th>
-              <th style="text-align:right" data-en="Open">Otvoreno</th>
-            </tr>
+            <tr><th data-en="Day">Dan</th><th style="text-align:right" data-en="Open">Otvoreno</th></tr>
           </thead>
           <tbody id="hoursBody">
             <tr data-day="1" data-open="09:00" data-close="20:00"><td data-en="Monday">Ponedjeljak</td><td>09:00 – 20:00</td></tr>
@@ -639,7 +854,7 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
           </tbody>
         </table>
       </div>
-      <div class="card">
+      <div class="card" data-reveal style="--d:90ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></div>
         <h3 data-en="When it is quiet">Kad je najmanje gužve</h3>
         <!-- FILL: the shop knows its own rush better than this does. -->
@@ -647,7 +862,7 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
           Najmirnije je radnim danom prije podne. Petak poslijepodne i subota ujutro su
           najgušći — tada računaj na čekanje.
         </p>
-        <p class="muted" style="margin-top:16px" data-en="Last cut starts half an hour before closing.">
+        <p class="muted" style="margin-top:18px" data-en="Last cut starts half an hour before closing.">
           Zadnje šišanje počinje pola sata prije zatvaranja.
         </p>
       </div>
@@ -658,12 +873,13 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 <!-- ===================== FIND US ===================== -->
 <section id="gdje">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" data-reveal>
+      <span class="idx">06</span>
       <span class="eyebrow" data-en="Find us">Gdje smo</span>
       <h2 data-en="In the middle of Poreč.">U centru Poreča.</h2>
     </div>
-    <div class="find">
-      <div class="card">
+    <div class="two">
+      <div class="card" data-reveal>
         <p class="addr">
           <strong>Barber 33</strong>
           <span data-shop="address"><i class="fill" data-en="street and number">ulica i kućni broj</i></span><br>
@@ -671,22 +887,34 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
         </p>
         <div class="btns">
           <a class="btn btn-1" data-shop="map" href="#kontakt">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
-            <span data-en="Open in Maps">Otvori u kartama</span>
+            <span class="btn-face">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+              <span data-en="Open in Maps">Otvori u kartama</span>
+            </span>
+            <span class="btn-face btn-fill" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
+              <span data-en="Open in Maps">Otvori u kartama</span>
+            </span>
           </a>
           <a class="btn btn-2" data-shop="call" href="#kontakt">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-            <span data-en="Call">Nazovi</span>
+            <span class="btn-face">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <span data-en="Call">Nazovi</span>
+            </span>
+            <span class="btn-face btn-fill" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <span data-en="Call">Nazovi</span>
+            </span>
           </a>
         </div>
       </div>
 
-      <div class="card" id="kontakt">
+      <div class="card" id="kontakt" data-reveal style="--d:90ms">
         <span class="eyebrow" data-en="Contact">Kontakt</span>
-        <div class="clist">
+        <div style="margin-top:10px">
           <a class="crow" data-shop="call-row" href="#kontakt">
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
-          <span class="meta">
+            <span class="meta">
               <span class="lbl" data-en="Phone">Telefon</span>
               <b data-shop="phone-txt"><i class="fill" data-en="add the number">upiši broj</i></b>
             </span>
@@ -715,12 +943,24 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 
 <div class="callbar" id="callbar">
   <a class="btn btn-1" data-shop="call" href="#kontakt">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-    <span data-en="Call">Nazovi</span>
+    <span class="btn-face">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+      <span data-en="Call">Nazovi</span>
+    </span>
+    <span class="btn-face btn-fill" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+      <span data-en="Call">Nazovi</span>
+    </span>
   </a>
   <a class="btn btn-2" data-shop="map" href="#gdje">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-    <span data-en="Directions">Upute</span>
+    <span class="btn-face">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <span data-en="Directions">Upute</span>
+    </span>
+    <span class="btn-face btn-fill" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      <span data-en="Directions">Upute</span>
+    </span>
   </a>
 </div>
 
@@ -752,6 +992,7 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 
   var $  = function(s, r){ return (r||document).querySelector(s); };
   var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+  var STILL = matchMedia('(prefers-reduced-motion: reduce)');
 
   /* =========================================================
      LANGUAGE
@@ -760,7 +1001,8 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
      attributes beside it. A phone that is not set to Croatian gets
      English on its first visit — Poreč is half full of people who
      would otherwise bounce — and whatever anyone picks by hand wins
-     from then on.
+     from then on. The loading screen covers the swap, so it never
+     shows as a flash of the wrong language.
      ========================================================= */
   var LANG = 'hr';
   try{
@@ -770,34 +1012,29 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
   }catch(e){}
 
   var TXT = {
-    open:      {hr:'Otvoreno',        en:'Open now'},
-    closing:   {hr:'Zatvaramo uskoro',en:'Closing soon'},
-    closed:    {hr:'Zatvoreno',       en:'Closed'},
-    until:     {hr:'do',              en:'until'},
-    opensAt:   {hr:'otvaramo u',      en:'opens at'},
-    opensOn:   {hr:'otvaramo',        en:'opens'},
-    at:        {hr:'u',               en:'at'},
-    title:     {hr:'Barber 33 — walk-in barbershop u Poreču',
-                en:'Barber 33 — walk-in barbershop in Poreč'},
-    desc:      {hr:'Barber 33 je walk-in barbershop u Poreču. Bez naručivanja — radimo po redu dolaska.',
-                en:'Barber 33 is a walk-in barbershop in Poreč. No appointments — first come, first served.'},
+    open:    {hr:'Otvoreno',         en:'Open now'},
+    closing: {hr:'Zatvaramo uskoro', en:'Closing soon'},
+    closed:  {hr:'Zatvoreno',        en:'Closed'},
+    until:   {hr:'do',               en:'until'},
+    opensAt: {hr:'otvaramo u',       en:'opens at'},
+    opensOn: {hr:'otvaramo',         en:'opens'},
+    at:      {hr:'u',                en:'at'},
+    title:   {hr:'Barber 33 — walk-in barbershop u Poreču',
+              en:'Barber 33 — walk-in barbershop in Poreč'},
+    desc:    {hr:'Barber 33 je walk-in barbershop u Poreču. Bez naručivanja — radimo po redu dolaska.',
+              en:'Barber 33 is a walk-in barbershop in Poreč. No appointments — first come, first served.'},
     /* Sunday first, to line up with Date#getDay(). */
-    days:      {hr:['ned','pon','uto','sri','čet','pet','sub'],
-                en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']}
+    days:    {hr:['ned','pon','uto','sri','čet','pet','sub'],
+              en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']}
   };
   function T(k){ return TXT[k][LANG]; }
 
   function applyLang(){
     var en = LANG === 'en';
-    $$('[data-en],[data-en-html]').forEach(function(n){
-      if(n.hasAttribute('data-en-html')){
-        if(n.__hr === undefined) n.__hr = n.innerHTML;
-        n.innerHTML = en ? n.getAttribute('data-en-html') : n.__hr;
-        return;
-      }
+    $$('[data-en]').forEach(function(n){
       /* Plain text only. Anything with markup inside it — the "still to
-         fill in" markers — carries data-en on the inner element instead, so
-         nothing here ever flattens a child out of the page. */
+         fill in" markers — carries data-en on the inner element instead,
+         so nothing here ever flattens a child out of the page. */
       if(n.__hr === undefined) n.__hr = n.textContent;
       n.textContent = en ? n.getAttribute('data-en') : n.__hr;
     });
@@ -815,10 +1052,10 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
   /* =========================================================
      OPEN OR CLOSED, RIGHT NOW
 
-     Read off the hours table so there is one set of hours on this
-     page rather than two that can drift apart. The clock is Poreč's,
-     not the visitor's: in August a good share of the people reading
-     this are still on a phone set to Munich or Vienna.
+     Read off the hours table so there is one set of hours on this page
+     rather than two that can drift apart. The clock is Poreč's, not the
+     visitor's: in August a good share of the people reading this are on
+     a phone still set to Munich.
      ========================================================= */
   function shopNow(){
     try{
@@ -829,15 +1066,15 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
       var o = {};
       parts.forEach(function(p){ o[p.type] = p.value; });
       var idx = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[o.weekday];
-      var h = parseInt(o.hour, 10) % 24;          /* some engines say 24 at midnight */
       if(idx === undefined) throw 0;
+      var h = parseInt(o.hour, 10) % 24;      /* some engines say 24 at midnight */
       return { day: idx, mins: h * 60 + parseInt(o.minute, 10) };
     }catch(e){
       var d = new Date();
       return { day: d.getDay(), mins: d.getHours() * 60 + d.getMinutes() };
     }
   }
-
+  function toMins(s){ var p = String(s).split(':'); return (+p[0]) * 60 + (+p[1] || 0); }
   function hoursTable(){
     var out = {};
     $$('#hoursBody tr').forEach(function(tr){
@@ -848,17 +1085,14 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
     });
     return out;
   }
-  function toMins(s){ var p = String(s).split(':'); return (+p[0]) * 60 + (+p[1] || 0); }
 
   function paintStatus(){
     var pill = $('#status'), txt = $('#statusTxt');
     if(!pill || !txt) return;
-
     var now = shopNow(), table = hoursTable(), today = table[now.day];
 
     $$('#hoursBody tr').forEach(function(tr){ tr.classList.remove('today'); });
     if(today && today.row) today.row.classList.add('today');
-
     pill.classList.remove('open', 'soon');
 
     if(today && today.open !== undefined && now.mins >= today.open && now.mins < today.close){
@@ -868,7 +1102,6 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
                       T('until') + ' ' + today.c;
       return;
     }
-
     /* Shut: say when it opens again, because "closed" on its own sends
        someone to a competitor rather than back tomorrow morning. */
     if(today && today.open !== undefined && now.mins < today.open){
@@ -913,14 +1146,8 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
       }
     });
 
-    if(SHOP.phone){
-      var p = $('[data-shop="phone-txt"]');
-      if(p) p.textContent = SHOP.phone;
-    }
-    if(SHOP.address){
-      var ad = $('[data-shop="address"]');
-      if(ad) ad.textContent = SHOP.address;
-    }
+    if(SHOP.phone){ var p = $('[data-shop="phone-txt"]'); if(p) p.textContent = SHOP.phone; }
+    if(SHOP.address){ var ad = $('[data-shop="address"]'); if(ad) ad.textContent = SHOP.address; }
     var ig = $('[data-shop="ig"]');
     if(SHOP.instagram && ig){
       ig.href = 'https://instagram.com/' + SHOP.instagram.replace(/^@/, '');
@@ -942,6 +1169,111 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
     }
   }
 
+  /* The ticker is one string printed twice: the track slides exactly half
+     its own width, so the second copy is under the cursor at the moment the
+     first runs out and the loop has no seam. */
+  function ticker(){
+    var t = $('#tick'); if(!t) return;
+    var words = 'Walk-in · Bez naručivanja · Po redu dolaska · No appointments · Fade · Brada · Britva · Poreč · ';
+    var one = '';
+    for(var i = 0; i < 4; i++) one += words;
+    t.innerHTML = '<span>' + one + '</span><span>' + one + '</span>';
+  }
+
+  /* =========================================================
+     SCROLL
+
+     One listener, read inside a rAF, writing nothing but transforms
+     and one class. Header state, the progress line and the hero's
+     parallax all come off the same scroll position.
+     ========================================================= */
+  function scroller(){
+    var hdr = $('#hdr'), prog = $('#prog'), img = $('#heroImg'), hero = $('.hero');
+    var ticking = false, stuck = false;
+
+    function frame(){
+      ticking = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop;
+
+      if(hdr){
+        var s = y > 24;
+        if(s !== stuck){ stuck = s; hdr.classList.toggle('stuck', s); }
+      }
+      if(prog){
+        var max = document.documentElement.scrollHeight - innerHeight;
+        prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
+      }
+      /* The photograph drifts at roughly a fifth of the page's speed. Its
+         wrapper is inset past the edges, so it never uncovers one. */
+      if(img && hero && !STILL.matches){
+        var h = hero.offsetHeight;
+        if(y < h) img.style.transform = 'translate3d(0,' + (y * 0.22) + 'px,0)';
+      }
+    }
+    addEventListener('scroll', function(){
+      if(!ticking){ ticking = true; requestAnimationFrame(frame); }
+    }, {passive:true});
+    frame();
+  }
+
+  /* Reveal once, then stop watching. Nothing re-hides on the way back up —
+     a section that has been read has been read. */
+  function reveals(){
+    var items = $$('[data-reveal], [data-reveal-group]');
+    function open(el){
+      /* A clipped element reports an intersection ratio of zero however much
+         of it is on screen, so the gallery tiles — which hold their own
+         clip-path — are watched through their container and opened from it.
+         Each tile keeps its own --d, so they still arrive in order. */
+      if(el.hasAttribute('data-reveal-group')){
+        $$('.tile', el).forEach(function(t){ t.classList.add('in'); });
+      } else {
+        el.classList.add('in');
+      }
+    }
+    if(!('IntersectionObserver' in window)){ items.forEach(open); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        open(e.target);
+        io.unobserve(e.target);
+      });
+    }, {rootMargin:'0px 0px -12% 0px', threshold:0.08});
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  /* =========================================================
+     THE LOADING SCREEN
+
+     It lifts when the hero photograph is ready, or on the failsafe,
+     whichever comes first. The hero's own entrance is started by the
+     same call, so the headline rides up as the cover clears rather
+     than after it.
+     ========================================================= */
+  function boot(){
+    var el = $('#boot'), img = $('#heroImg'), done = false;
+
+    function go(){
+      if(done) return;
+      done = true;
+      document.body.classList.add('ready');
+      if(el){
+        el.classList.add('gone');
+        setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 900);
+      }
+    }
+
+    /* A stalled or broken image must never hold the page hostage. */
+    var failsafe = setTimeout(go, 2600);
+    function ready(){ clearTimeout(failsafe); setTimeout(go, STILL.matches ? 0 : 420); }
+
+    if(!img || img.complete){ ready(); }
+    else {
+      img.addEventListener('load', ready, {once:true});
+      img.addEventListener('error', ready, {once:true});
+    }
+  }
+
   var lb = $('#langBtn');
   if(lb) lb.addEventListener('click', function(){
     LANG = (LANG === 'hr') ? 'en' : 'hr';
@@ -950,7 +1282,11 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
   });
 
   wire();
+  ticker();
+  reveals();
+  scroller();
   if(LANG === 'en') applyLang(); else paintStatus();
+  boot();
 
   /* Open at 09:00 should say so at 09:00, not on the next reload. */
   setInterval(paintStatus, 60000);

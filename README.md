@@ -33,12 +33,20 @@ Worth a second pair of eyes from the shop as well:
 
 ## Photos
 
-Drop `shop-1.jpg` … `shop-5.jpg` into `assets/` and the gallery picks them
-up — the first is the large tile. Until a file exists, that tile falls back
-to a drawn panel rather than showing a broken image, so the row is safe to
-ship half-finished.
+- `assets/hero-*.jpg` — the room, one photograph at three widths.
+- `assets/work-*.jpg` — the four cuts in the gallery, each at two widths,
+  cropped to a uniform 3:4 so the row is never ragged.
 
-Roughly 1600px on the long edge is plenty; they are displayed as squares.
+To swap any of them, drop the new picture in and re-run the resizer used to
+make them (three widths for the hero, two for a gallery tile). Keep the
+gallery at 3:4.
+
+## The logo
+
+Not in the repository yet. The header and the loading screen currently set
+the name in type; both carry a `FILL: logo` comment marking the one line to
+uncomment once `assets/logo.svg` (or `.png`) exists. The mark is dark green
+on transparent, so on this background it wants the cream or brass version.
 
 ## How it behaves
 
@@ -51,6 +59,14 @@ Roughly 1600px on the long edge is plenty; they are displayed as squares.
   door opens again.
 - **The call bar** on a phone keeps the number and the directions within
   thumb reach the whole way down the page.
+- **The loading screen** covers the moment before the hero photograph has
+  decoded, and lifts as soon as it is ready. A failsafe timer lifts it
+  regardless, and `<noscript>` removes it entirely — a slow photograph can
+  never leave anyone looking at a covered page.
+- **Motion** is gated: every animation stops under
+  `prefers-reduced-motion`, every hover effect is behind `(hover: hover)`,
+  and the translucent chrome turns solid under
+  `prefers-reduced-transparency`.
 
 ## Running it locally
 
