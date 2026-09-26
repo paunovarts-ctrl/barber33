@@ -2,7 +2,7 @@
 
 Public site for **Barber 33**, a walk-in barbershop in Poreč, Croatia.
 
-One file, no build step, no framework — `index.html` is the whole site.
+One file, no build step, no framework. `index.html` is the whole site.
 
 Because the shop takes no bookings, the page is built around the three things
 someone standing in the street actually wants: whether the door is open, what
@@ -13,19 +13,19 @@ a cut costs, and which way to walk.
 Two places hold everything the shop still has to confirm. Both are marked
 `FILL` in `index.html`:
 
-1. **`SHOP`**, at the top of the script at the bottom of the file — phone,
+1. **`SHOP`**, at the top of the script at the bottom of the file: phone,
    street address, Instagram handle. Every call button, every maps link and
    the contact block read from here, so it is the only place to type them.
    A field left empty is handled rather than faked: the call buttons
    disappear instead of offering a dead link, and the contact row keeps
    saying *upiši broj* so nobody ships the site without noticing.
-2. **The JSON-LD block** in `<head>` — the same address and phone again, this
+2. **The JSON-LD block** in `<head>`, the same address and phone again, this
    time for Google's local results. Keep it in step with `SHOP`.
 
 Worth a second pair of eyes from the shop as well:
 
 - the prices and durations in the **Cjenik** section
-- the **opening hours table** — the open/closed badge at the top of the page
+- the **opening hours table**, because the open/closed badge at the top of the page
   is computed from its `data-open` / `data-close` attributes, so an hour
   wrong there is wrong in two places
 - the quiet-times note beside the hours
@@ -33,8 +33,8 @@ Worth a second pair of eyes from the shop as well:
 
 ## Photos
 
-- `assets/hero-*.jpg` — the room, one photograph at three widths.
-- `assets/work-*.jpg` — the four cuts in the gallery, each at two widths,
+- `assets/hero-*.jpg` is the room, one photograph at three widths.
+- `assets/work-*.jpg` are the four cuts in the gallery, each at two widths,
   cropped to a uniform 3:4 so the row is never ragged.
 
 To swap any of them, drop the new picture in and re-run the resizer used to
@@ -43,8 +43,8 @@ gallery at 3:4.
 
 ## The logo
 
-`assets/logo.svg` is the shop's mark — top hat, spectacles, scissor-blade
-moustache — traced to vector. The page defines it once as an inline
+`assets/logo.svg` is the shop's mark, top hat, spectacles and scissor-blade
+moustache, traced to vector. The page defines it once as an inline
 `<symbol>` and uses it twice, in the header and on the loading screen.
 
 It is inline rather than an `<img>` on purpose: an SVG loaded through `<img>`
@@ -54,8 +54,8 @@ the mark takes its colour from whatever it sits in.
 
 `assets/logo-mark.png` is the same shape as a white-on-transparent bitmap,
 and is the master the icons are built from. It exists because the supplied
-artwork had no alpha channel — its "transparency" was a checkerboard baked
-into the pixels — so the mark was keyed out by luminance, which the
+artwork had no alpha channel: its "transparency" was a checkerboard baked
+into the pixels, so the mark was keyed out by luminance, which the
 histogram made unambiguous.
 
 ## How it behaves
@@ -64,14 +64,14 @@ histogram made unambiguous.
   A phone not set to Croatian gets English on its first visit, and whatever
   anyone picks with the EN/HR button wins from then on.
 - **The open/closed badge** reads the hours table and Poreč's clock, not the
-  visitor's — in August a good share of the people reading this are on a
+  visitor's, because in August a good share of the people reading this are on a
   phone still set to Munich. Closed is never just "closed": it says when the
   door opens again.
 - **The call bar** on a phone keeps the number and the directions within
   thumb reach the whole way down the page.
 - **The loading screen** covers the moment before the hero photograph has
   decoded, and lifts as soon as it is ready. A failsafe timer lifts it
-  regardless, and `<noscript>` removes it entirely — a slow photograph can
+  regardless, and `<noscript>` removes it entirely, so a slow photograph can
   never leave anyone looking at a covered page.
 - **Motion** is gated: every animation stops under
   `prefers-reduced-motion`, every hover effect is behind `(hover: hover)`,
@@ -101,5 +101,5 @@ CSS custom properties in `index.html`; change both together.
 
 ## Deploying
 
-Static — there is nothing to build. Vercel serves the repository root as-is;
+Static, with nothing to build. Vercel serves the repository root as-is;
 `vercel.json` only sets cache and security headers.

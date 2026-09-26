@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <!-- ============================================================
-     BARBER 33 — Poreč. Public site for a walk-in barbershop.
+     BARBER 33, Poreč. Public site for a walk-in barbershop.
 
-     FILL IN BEFORE GOING LIVE — search the file for "FILL":
+     FILL IN BEFORE GOING LIVE. Search the file for "FILL":
 
-       1. the SHOP object at the foot of this file — phone, address,
+       1. the SHOP object at the foot of this file: phone, address,
           Instagram. It drives every call button, every directions
           link and the contact block. Leave a field empty and the
           site stops offering that button rather than dialling a
           wrong number.
-       2. the JSON-LD block below — the same facts again, for
+       2. the JSON-LD block below, the same facts again, for
           Google's local results. Keep the two in step.
      Also worth a second pair of eyes from the shop: the prices and
      durations, the opening hours table (the open/closed badge is
@@ -29,8 +29,8 @@
      No build step, no framework, one file.
      ============================================================ -->
 
-<title>Barber 33 — walk-in barbershop u Poreču</title>
-<meta name="description" content="Barber 33 je walk-in barbershop u Poreču. Bez naručivanja — radimo po redu dolaska. Šišanje, fade, brijanje britvom i oblikovanje brade.">
+<title>Barber 33, walk-in barbershop u Poreču</title>
+<meta name="description" content="Barber 33 je walk-in barbershop u Poreču. Bez naručivanja, radimo po redu dolaska. Šišanje, fade, brijanje britvom i oblikovanje brade.">
 <meta name="theme-color" content="#0A0B0C">
 <meta name="color-scheme" content="dark">
 
@@ -46,7 +46,7 @@
       imagesizes="100vw" fetchpriority="high">
 
 <meta property="og:type" content="business.business">
-<meta property="og:title" content="Barber 33 — walk-in barbershop u Poreču">
+<meta property="og:title" content="Barber 33, walk-in barbershop u Poreču">
 <meta property="og:description" content="Bez naručivanja. Radimo po redu dolaska. Šišanje, fade, brijanje britvom i brada.">
 <meta property="og:image" content="assets/share-card.jpg">
 <meta property="og:locale" content="hr_HR">
@@ -57,7 +57,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- FILL: the same facts as SHOP, for Google's local panel. Everything in
-     square brackets is a placeholder — replace it or delete the line. A
+     square brackets is a placeholder. Replace it or delete the line. A
      wrong address here outlives a wrong address on the page. -->
 <script type="application/ld+json">
 {
@@ -90,7 +90,7 @@
    TOKENS
 
    The green is the shop's own wall, sampled off the photographs
-   rather than picked from a palette — and it is the green the logo
+   rather than picked from a palette, and it is the green the logo
    is drawn in. It is the one colour a customer already recognises
    from standing in the room.
 
@@ -170,7 +170,7 @@ section{padding:clamp(60px,9vw,120px) 0;}
 
    Two stacked faces holding the same label, the top one clipped away
    and wiped in on hover. Transitioning colours separately can never
-   land together the way one clip does — label, icon and background
+   land together the way one clip does: label, icon and background
    all change on a single edge.
    ========================================================= */
 .btn{
@@ -213,7 +213,7 @@ section{padding:clamp(60px,9vw,120px) 0;}
    it covers the moment before the hero photograph has decoded, so
    nobody meets this page as an empty dark rectangle. It lifts as
    soon as that image is ready, and a failsafe timer lifts it
-   regardless — a slow photograph must never hold the page hostage.
+   regardless, because a slow photograph must never hold the page hostage.
    ========================================================= */
 .boot{
   position:fixed;inset:0;z-index:200;background:var(--ink);
@@ -249,7 +249,7 @@ section{padding:clamp(60px,9vw,120px) 0;}
 @keyframes bootBar{ to{transform:scaleX(1);} }
 
 /* =========================================================
-   HEADER — a translucent layer the page scrolls under, not an
+   HEADER. A translucent layer the page scrolls under, not an
    opaque strip that eats a fixed band of the screen.
    ========================================================= */
 header{
@@ -362,7 +362,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .status b{color:var(--cream);font-weight:600;}
 
 /* =========================================================
-   TICKER — constant motion, so linear. Nothing else on the page
+   TICKER. Constant motion, so linear. Nothing else on the page
    loops; this is the one thing allowed to just run.
    ========================================================= */
 .ticker{
@@ -448,7 +448,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 }
 
 /* =========================================================
-   GALLERY — tiles uncover from the bottom rather than fading, and
+   GALLERY. Tiles uncover from the bottom rather than fading, and
    the photograph inside settles back from a slight push, so the
    picture arrives rather than switching on.
    ========================================================= */
@@ -475,7 +475,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    ========================================================= */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 /* A 1fr track is floored at its content's min-content width, and the button
-   labels below are nowrap — without this the cards refused to go narrower
+   labels below are nowrap. Without this the cards refused to go narrower
    than their widest button and pushed a 320px screen sideways. */
 .two > *,.grid > *{min-width:0;}
 @media (max-width:800px){ .two{grid-template-columns:1fr;} }
@@ -541,7 +541,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 /* =========================================================
    REDUCED MOTION
 
-   Not "no feedback" — gentler feedback. Everything that travels
+   Not "no feedback", but gentler feedback. Everything that travels
    through space stops travelling; the opacity changes that explain
    what arrived when are kept, and shortened.
    ========================================================= */
@@ -633,8 +633,8 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
       <span class="line" style="--d:80ms"><span data-en="No appointments.">Bez naručivanja.</span></span>
       <span class="line" style="--d:180ms"><em><span data-en="Just walk in.">Samo uđi.</span></em></span>
     </h1>
-    <p class="lede rise" style="--d:420ms" data-en="Barber 33 is a walk-in barbershop in Poreč. No calendar, no appointments — first come, first served. You come in, you sit down, you leave sharp.">
-      Barber 33 je walk-in barbershop u Poreču. Nema kalendara ni termina — radimo po redu
+    <p class="lede rise" style="--d:420ms" data-en="Barber 33 is a walk-in barbershop in Poreč. No calendar, no appointments. First come, first served. You come in, you sit down, you leave sharp.">
+      Barber 33 je walk-in barbershop u Poreču. Nema kalendara ni termina. Radimo po redu
       dolaska. Dođeš, sjedneš, izađeš ošišan.
     </p>
 
@@ -690,9 +690,9 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
       <div class="step" data-reveal style="--d:0ms">
         <span class="n" aria-hidden="true">01</span>
         <h3 data-en="Come when it suits you">Dođi kad ti paše</h3>
-        <p data-en="No booking and nothing to install. Check the hours, walk in and say hello. First come, first served — always.">
+        <p data-en="No booking and nothing to install. Check the hours, walk in and say hello. Always first come, first served.">
           Bez naručivanja i bez instaliranja ičega. Provjeri radno vrijeme, uđi i javi se.
-          Po redu dolaska — uvijek.
+          Uvijek po redu dolaska.
         </p>
       </div>
       <div class="step" data-reveal style="--d:80ms">
@@ -780,8 +780,8 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
       <div class="card" data-reveal style="--d:0ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div>
         <h3 data-en="Classic and fade">Klasika i fade</h3>
-        <p data-en="From a tidy classic cut to a skin fade. Tell us the number or show us a photo — both work.">
-          Od uredne klasike do skin fadea. Reci broj ili pokaži sliku — oboje radi.
+        <p data-en="From a tidy classic cut to a skin fade. Tell us the number or show us a photo. Both work.">
+          Od uredne klasike do skin fadea. Reci broj ili pokaži sliku. Oboje radi.
         </p>
       </div>
       <div class="card" data-reveal style="--d:70ms">
@@ -794,8 +794,8 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
       <div class="card" data-reveal style="--d:140ms">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.4 0 7 2.6 7 6.5 0 4.6-3 11.5-7 11.5S5 14.1 5 9.5C5 5.6 7.6 3 12 3z"/><path d="M9 9h.01M15 9h.01"/></svg></div>
         <h3 data-en="Beard and detail">Brada i detalji</h3>
-        <p data-en="Beard line, neck and sideburns are part of the cut — they are not charged separately.">
-          Linija brade, vrat i zalisci dio su šišanja — ne naplaćuju se posebno.
+        <p data-en="Beard line, neck and sideburns are part of the cut, not charged separately.">
+          Linija brade, vrat i zalisci dio su šišanja i ne naplaćuju se posebno.
         </p>
       </div>
       <div class="card" data-reveal style="--d:210ms">
@@ -844,7 +844,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 </section>
 
 <!-- ===================== HOURS ===================== -->
-<!-- FILL: the hours below are the single source of truth — the badge at the
+<!-- FILL: the hours below are the single source of truth. The badge at the
      top of the page is computed from these data- attributes, so anything
      wrong here is wrong twice. -->
 <section id="vrijeme" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
@@ -875,9 +875,9 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></div>
         <h3 data-en="When it is quiet">Kad je najmanje gužve</h3>
         <!-- FILL: the shop knows its own rush better than this does. -->
-        <p data-en="Weekday mornings are the quietest. Friday afternoon and Saturday morning are the busiest — come then and expect to wait a while.">
+        <p data-en="Weekday mornings are the quietest. Friday afternoon and Saturday morning are the busiest, so come then and expect to wait a while.">
           Najmirnije je radnim danom prije podne. Petak poslijepodne i subota ujutro su
-          najgušći — tada računaj na čekanje.
+          najgušći, pa tada računaj na čekanje.
         </p>
         <p class="muted" style="margin-top:18px" data-en="Last cut starts half an hour before closing.">
           Zadnje šišanje počinje pola sata prije zatvaranja.
@@ -951,7 +951,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 
 <footer>
   <div class="wrap ft">
-    <span data-en="Barber 33 — walk-in barbershop, Poreč.">Barber 33 — walk-in barbershop, Poreč.</span>
+    <span data-en="Barber 33, walk-in barbershop in Poreč.">Barber 33, walk-in barbershop u Poreču.</span>
     <a href="#cjenik" data-en="Prices">Cjenik</a>
     <a href="#vrijeme" data-en="Hours">Radno vrijeme</a>
     <span class="sp" data-en="No appointments. First come, first served.">Bez naručivanja. Po redu dolaska.</span>
@@ -986,7 +986,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
   "use strict";
 
   /* =========================================================
-     FILL — the shop's own details.
+     FILL: the shop's own details.
 
      This is the only place the phone number, the address and the
      Instagram handle are written. Every call button, every map link
@@ -1016,8 +1016,8 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 
      The page is written in Croatian; English lives in data-en
      attributes beside it. A phone that is not set to Croatian gets
-     English on its first visit — Poreč is half full of people who
-     would otherwise bounce — and whatever anyone picks by hand wins
+     English on its first visit, because Poreč is half full of people who
+     would otherwise bounce, and whatever anyone picks by hand wins
      from then on. The loading screen covers the swap, so it never
      shows as a flash of the wrong language.
      ========================================================= */
@@ -1036,10 +1036,10 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
     opensAt: {hr:'otvaramo u',       en:'opens at'},
     opensOn: {hr:'otvaramo',         en:'opens'},
     at:      {hr:'u',                en:'at'},
-    title:   {hr:'Barber 33 — walk-in barbershop u Poreču',
-              en:'Barber 33 — walk-in barbershop in Poreč'},
-    desc:    {hr:'Barber 33 je walk-in barbershop u Poreču. Bez naručivanja — radimo po redu dolaska.',
-              en:'Barber 33 is a walk-in barbershop in Poreč. No appointments — first come, first served.'},
+    title:   {hr:'Barber 33, walk-in barbershop u Poreču',
+              en:'Barber 33, walk-in barbershop in Poreč'},
+    desc:    {hr:'Barber 33 je walk-in barbershop u Poreču. Bez naručivanja, radimo po redu dolaska.',
+              en:'Barber 33 is a walk-in barbershop in Poreč. No appointments. First come, first served.'},
     /* Sunday first, to line up with Date#getDay(). */
     days:    {hr:['ned','pon','uto','sri','čet','pet','sub'],
               en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']}
@@ -1049,8 +1049,8 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
   function applyLang(){
     var en = LANG === 'en';
     $$('[data-en]').forEach(function(n){
-      /* Plain text only. Anything with markup inside it — the "still to
-         fill in" markers — carries data-en on the inner element instead,
+      /* Plain text only. Anything with markup inside it, such as the "still to
+         fill in" markers, carries data-en on the inner element instead,
          so nothing here ever flattens a child out of the page. */
       if(n.__hr === undefined) n.__hr = n.textContent;
       n.textContent = en ? n.getAttribute('data-en') : n.__hr;
@@ -1233,14 +1233,14 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
     frame();
   }
 
-  /* Reveal once, then stop watching. Nothing re-hides on the way back up —
+  /* Reveal once, then stop watching. Nothing re-hides on the way back up:
      a section that has been read has been read. */
   function reveals(){
     var items = $$('[data-reveal], [data-reveal-group]');
     function open(el){
       /* A clipped element reports an intersection ratio of zero however much
-         of it is on screen, so the gallery tiles — which hold their own
-         clip-path — are watched through their container and opened from it.
+         of it is on screen, so the gallery tiles, which hold their own
+         clip-path, are watched through their container and opened from it.
          Each tile keeps its own --d, so they still arrive in order. */
       if(el.hasAttribute('data-reveal-group')){
         $$('.tile', el).forEach(function(t){ t.classList.add('in'); });

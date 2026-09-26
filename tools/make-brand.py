@@ -39,7 +39,7 @@ def tinted(height, rgb):
 def icon(size, bleed=False, share=0.74):
     """One app icon: the mark, centred, on the shop's green.
 
-    bleed fills the whole square — iOS applies its own corner mask, and a
+    bleed fills the whole square, because iOS applies its own corner mask and a
     rounded icon inside that mask reads as a shrunken sticker.
     """
     W = size * SS
@@ -100,7 +100,7 @@ f33 = B(108)
 cd.text((X, 424), '33', font=f33, fill=BRASS, anchor='ls')
 cd.text((X + cd.textlength('33', font=f33) + 34, 424), 'POREČ',
         font=B(44), fill=CREAM, anchor='ls')
-cd.text((X, 505), 'Walk-in barbershop — bez naručivanja',
+cd.text((X, 505), 'Walk-in barbershop, bez naručivanja',
         font=R(34), fill=(163, 155, 145), anchor='ls')
 
 card.save(os.path.join(ASSETS, 'share-card.jpg'),
