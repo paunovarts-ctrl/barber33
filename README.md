@@ -43,10 +43,20 @@ gallery at 3:4.
 
 ## The logo
 
-Not in the repository yet. The header and the loading screen currently set
-the name in type; both carry a `FILL: logo` comment marking the one line to
-uncomment once `assets/logo.svg` (or `.png`) exists. The mark is dark green
-on transparent, so on this background it wants the cream or brass version.
+`assets/logo.svg` is the shop's mark — top hat, spectacles, scissor-blade
+moustache — traced to vector. The page defines it once as an inline
+`<symbol>` and uses it twice, in the header and on the loading screen.
+
+It is inline rather than an `<img>` on purpose: an SVG loaded through `<img>`
+is an isolated document that cannot see this page's CSS, so `currentColor`
+would resolve to black instead of the cream those two places want. Inlined,
+the mark takes its colour from whatever it sits in.
+
+`assets/logo-mark.png` is the same shape as a white-on-transparent bitmap,
+and is the master the icons are built from. It exists because the supplied
+artwork had no alpha channel — its "transparency" was a checkerboard baked
+into the pixels — so the mark was keyed out by luminance, which the
+histogram made unambiguous.
 
 ## How it behaves
 
@@ -78,8 +88,8 @@ Then <http://localhost:8146/>.
 
 ## Assets
 
-`icons/` and `assets/share-card.jpg` are generated, not drawn by hand. The
-barber pole and the share card come out of `tools/make-brand.py`, so a colour
+`icons/` and `assets/share-card.jpg` are generated, not drawn by hand. They
+are built from `assets/logo-mark.png` by `tools/make-brand.py`, so a colour
 change is a re-run rather than a redraw:
 
 ```bash
