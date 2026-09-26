@@ -366,9 +366,21 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    loops; this is the one thing allowed to just run.
    ========================================================= */
 .ticker{
+  position:relative;
   background:var(--brass);color:#14100A;overflow:hidden;
   padding:13px 0;border-block:1px solid rgba(0,0,0,.18);
 }
+/* The words used to be sliced mid-letter at both ends of the screen. These
+   two are the brass itself, laid over the text, so the line fades out into
+   the band instead of hitting a cut edge. The band stays solid full width;
+   masking the whole strip would have tapered the brass away with it.
+   rgba rather than `transparent` so nothing interpolates through grey. */
+.ticker::before,.ticker::after{
+  content:'';position:absolute;top:0;bottom:0;z-index:1;pointer-events:none;
+  width:clamp(36px,9vw,130px);
+}
+.ticker::before{left:0; background:linear-gradient(90deg,var(--brass),rgba(200,160,70,0));}
+.ticker::after {right:0;background:linear-gradient(270deg,var(--brass),rgba(200,160,70,0));}
 .ticker-track{display:flex;width:max-content;animation:slide 34s linear infinite;}
 .ticker-track span{
   font:600 13px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;
@@ -1058,6 +1070,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
     document.documentElement.lang = en ? 'en' : 'hr';
     document.title = T('title');
     var m = $('meta[name="description"]'); if(m) m.setAttribute('content', T('desc'));
+    ticker();
     var b = $('#langBtn');
     if(b){
       b.textContent = en ? 'HR' : 'EN';
@@ -1188,13 +1201,24 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 
   /* The ticker is one string printed twice: the track slides exactly half
      its own width, so the second copy is under the cursor at the moment the
-     first runs out and the loop has no seam. */
+     first runs out and the loop has no seam.
+
+     It is rebuilt on every language change. It used to be one hardcoded
+     string with both languages mixed into it, built once at startup, so an
+     English reader was shown "Bez naručivanja" whatever they picked. */
+  var TICKER = {
+    hr: ['Walk-in','Bez naručivanja','Po redu dolaska','Šišanje','Fade','Brada','Britva','Poreč'],
+    en: ['Walk-in','No appointments','First come, first served','Haircut','Fade','Beard','Straight razor','Poreč']
+  };
   function ticker(){
     var t = $('#tick'); if(!t) return;
-    var words = 'Walk-in · Bez naručivanja · Po redu dolaska · No appointments · Fade · Brada · Britva · Poreč · ';
+    var words = TICKER[LANG].join(' · ') + ' · ';
     var one = '';
     for(var i = 0; i < 4; i++) one += words;
-    t.innerHTML = '<span>' + one + '</span><span>' + one + '</span>';
+    var a = document.createElement('span'), b = document.createElement('span');
+    a.textContent = one; b.textContent = one;
+    t.textContent = '';
+    t.appendChild(a); t.appendChild(b);
   }
 
   /* =========================================================
