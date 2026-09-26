@@ -25,9 +25,10 @@
        · the quiet-times note under the hours
        · "Hrvatski i engleski" in the What we do cards
 
-     Photos: drop shop-1.jpg … shop-5.jpg into assets/ and the
-     gallery picks them up. Until then those tiles fall back to a
-     drawn panel instead of a broken image.
+     Photos: the hero is assets/hero-*.jpg, one photograph at three
+     widths. For the gallery, drop shop-1.jpg … shop-5.jpg into
+     assets/ and it picks them up; until then those tiles fall back
+     to a drawn panel instead of a broken image.
 
      No build step, no framework, one file — same as everything
      else here. Croatian is the page; English is a swap away and
@@ -42,6 +43,12 @@
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<!-- The hero photograph is the largest thing painted on the page; without
+     this the browser does not find it until it has parsed the stylesheet. -->
+<link rel="preload" as="image" href="assets/hero-1400.jpg"
+      imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
+      imagesizes="100vw" fetchpriority="high">
 
 <meta property="og:type" content="business.business">
 <meta property="og:title" content="Barber 33 — walk-in barbershop u Poreču">
@@ -197,39 +204,53 @@ header{
 .lang:hover{border-color:var(--cream-2);color:var(--cream);}
 
 /* ---------- hero ---------- */
-.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(44px,6vw,80px);}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 148px;gap:clamp(24px,5vw,56px);align-items:center;}
+/* A photograph of the actual shop, which does more for a barbershop than any
+   amount of type. The text sits on a scrim rather than straight on the
+   picture: the lamp at the left edge is the brightest thing in the frame and
+   the headline lands right on top of it. */
+.hero{
+  position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;
+  min-height:min(84vh,780px);
+  padding-top:clamp(56px,10vw,120px);
+  padding-bottom:clamp(40px,6vw,76px);
+}
+.hero-bg{position:absolute;inset:0;}
+.hero-bg img{
+  width:100%;height:100%;object-fit:cover;
+  /* Favours the chairs. A phone crops this hard enough to lose them
+     altogether if it is left centred on the sofa. */
+  object-position:64% 50%;
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(103deg, rgba(9,9,11,.95) 0%, rgba(9,9,11,.86) 30%,
+                            rgba(9,9,11,.46) 64%, rgba(9,9,11,.34) 100%),
+    linear-gradient(to top, #0C0C0E 0%, rgba(12,12,14,.22) 34%, rgba(12,12,14,0) 62%);
+}
+.hero-inner{position:relative;z-index:1;width:100%;}
 .hero h1{margin:16px 0 0;}
 .hero h1 em{font-style:normal;color:var(--brass);display:block;}
 .hero .lede{margin-top:20px;max-width:32em;}
 .hero-cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:30px;}
-/* A 1fr track is floored at its content's min-content width, and
-   overflow-wrap does not lower that floor — so on a 320px phone with the
-   fallback font one long word was still widening the whole column. This is
-   what actually lets the headline wrap instead of pushing the page sideways. */
-.hero-grid > *{min-width:0;}
-@media (max-width:760px){ .hero-grid{grid-template-columns:1fr;} .pole{display:none;} }
-
-/* The pole. A repeating gradient scrolled on its own axis — the only
-   animation on the page, and it stops dead for a reduced-motion phone. */
-.pole{
-  justify-self:center;width:104px;height:360px;position:relative;
+/* An outline button on a photograph needs more than the 10% hairline the
+   cards use, and something behind it for the stretch of picture it crosses. */
+.hero .btn-2{
+  border-color:rgba(246,242,234,.34);background:rgba(10,10,12,.34);
+  backdrop-filter:blur(3px);
 }
-.pole-tube{
-  position:absolute;inset:26px 0;border-radius:52px;overflow:hidden;
-  background:repeating-linear-gradient(-58deg,
-    var(--red) 0 18px, #F6F2EA 18px 36px, var(--brass) 36px 54px, #F6F2EA 54px 72px);
-  background-size:auto 144px;
-  animation:spin 3.4s linear infinite;
-  box-shadow:inset -14px 0 26px rgba(0,0,0,.42), inset 12px 0 18px rgba(255,255,255,.22);
+.hero .btn-2:hover{border-color:var(--cream);background:rgba(10,10,12,.5);}
+@media (max-width:760px){
+  .hero{min-height:min(88vh,640px);}
+  /* Stacked on a phone the text sits at the bottom, so the weight of the
+     scrim moves there with it. */
+  .hero-bg::after{
+    background:
+      linear-gradient(to top, #0C0C0E 3%, rgba(12,12,14,.60) 48%, rgba(12,12,14,.30) 100%),
+      linear-gradient(103deg, rgba(9,9,11,.70) 0%, rgba(9,9,11,.38) 100%);
+  }
 }
-@keyframes spin{ from{background-position:0 0;} to{background-position:0 144px;} }
-@media (prefers-reduced-motion:reduce){ .pole-tube{animation:none;} }
-.pole-cap{
-  position:absolute;left:-7px;right:-7px;height:19px;border-radius:10px;
-  background:linear-gradient(180deg,var(--brass-2),#8C6C24);
-}
-.pole-cap.t{top:16px;} .pole-cap.b{bottom:16px;}
 
 /* ---------- open / closed badge ---------- */
 .status{
@@ -399,7 +420,13 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="top">
-  <div class="wrap hero-grid">
+  <div class="hero-bg" aria-hidden="true">
+    <img src="assets/hero-1400.jpg"
+         srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
+         sizes="100vw" width="2000" height="1493" alt=""
+         fetchpriority="high" decoding="async">
+  </div>
+  <div class="wrap hero-inner">
     <div>
       <span class="eyebrow" data-en="Barbershop · Poreč">Barbershop · Poreč</span>
       <h1><span data-en="No appointments.">Bez naručivanja.</span><em data-en="Just walk in.">Samo uđi.</em></h1>
@@ -425,12 +452,6 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;}
           <span id="statusTxt">Radno vrijeme</span>
         </span>
       </p>
-    </div>
-
-    <div class="pole" aria-hidden="true">
-      <span class="pole-cap t"></span>
-      <span class="pole-tube"></span>
-      <span class="pole-cap b"></span>
     </div>
   </div>
 </section>
