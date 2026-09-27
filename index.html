@@ -45,8 +45,8 @@
      loading screen waits on it; without this the browser does not go looking
      for it until it has parsed the stylesheet. -->
 <link rel="preload" as="image" href="assets/hero-1400.jpg"
-      imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w"
-      imagesizes="(max-width:860px) 100vw, 50vw" fetchpriority="high">
+      imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
+      imagesizes="100vw" fetchpriority="high">
 
 <meta property="og:type" content="business.business">
 <meta property="og:title" content="Barber 33, walk-in barbershop u Poreču">
@@ -376,7 +376,32 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   min-height:min(86vh,820px);
   background:var(--green);
 }
+/* The room, behind everything rather than under a scrim.
+
+   luminosity keeps the photograph's light and takes the field's colour,
+   so the room arrives already green instead of being a picture laid on
+   top of one. The mask thins it toward the left, where the words are,
+   and empties it at the bottom, so the hero has no edge to end on and
+   simply becomes the page. */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  -webkit-mask-image:linear-gradient(101deg,transparent 8%,rgba(0,0,0,.42) 42%,#000 80%),
+                     linear-gradient(to top,transparent 0%,#000 24%);
+          mask-image:linear-gradient(101deg,transparent 8%,rgba(0,0,0,.42) 42%,#000 80%),
+                     linear-gradient(to top,transparent 0%,#000 24%);
+  -webkit-mask-composite:source-in;  mask-composite:intersect;
+}
+.hero-bg img{
+  width:100%;height:100%;object-fit:cover;object-position:64% 50%;
+  /* The lamp in this photograph is its brightest thing and it lands right
+     where the words are. Pulling the whole image down and lifting opacity
+     back up keeps the mid-tone texture while taming that one highlight:
+     the field behind the lede measures 5.2:1 rather than 2.9:1. */
+  opacity:.55;mix-blend-mode:luminosity;
+  filter:brightness(.42) contrast(1.06);
+}
 .hero-grid{
+  position:relative;z-index:1;
   flex:1;display:grid;margin-inline:calc(var(--gut) * -1);
   grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
   grid-template-rows:1fr auto;
@@ -713,6 +738,7 @@ footer{border-top:1px solid var(--rule);}
   .stage-shot,.stage-shot.on{transform:none;}
 }
 @media (prefers-reduced-transparency:reduce){
+  .hero-bg{display:none;}
   header,header.stuck{background:var(--ink);backdrop-filter:none;}
   .callbar{background:var(--ink);backdrop-filter:none;}
   .btn-2{backdrop-filter:none;}
@@ -770,6 +796,12 @@ footer{border-top:1px solid var(--rule);}
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true">
+    <img id="heroImg" src="assets/hero-1400.jpg"
+         srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
+         sizes="100vw" width="2000" height="1493" alt=""
+         fetchpriority="high" decoding="async">
+  </div>
   <div class="wrap hero-inner">
    <div class="hero-grid">
     <div class="hero-left">
@@ -818,11 +850,7 @@ footer{border-top:1px solid var(--rule);}
          FILL: the rail's names are read off the photographs, not told to
          me by the shop. -->
     <div class="hero-stage rise" style="--d:300ms">
-      <img class="stage-shot on" id="heroImg" src="assets/hero-1400.jpg"
-           srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w"
-           sizes="(max-width:860px) 100vw, 50vw" width="1400" height="1045"
-           alt="Barber 33, Poreč" fetchpriority="high" decoding="async">
-      <img class="stage-shot" src="assets/work-1-1200.jpg" loading="lazy" decoding="async"
+      <img class="stage-shot on" src="assets/work-1-1200.jpg" decoding="async"
            width="1200" height="1600" alt="Teksturirano šišanje s niskim fadeom">
       <img class="stage-shot" src="assets/work-2-1200.jpg" loading="lazy" decoding="async"
            width="1200" height="1600" alt="Fade s plavo obojanim vrhom">
@@ -834,9 +862,6 @@ footer{border-top:1px solid var(--rule);}
 
     <div class="hero-rail" id="rail" role="tablist">
       <button class="rail-item on" type="button" role="tab" aria-selected="true">
-        <span class="rail-name" data-en="The shop">Salon</span>
-      </button>
-      <button class="rail-item" type="button" role="tab" aria-selected="false">
         <span class="rail-name" data-en="Fade">Fade</span>
       </button>
       <button class="rail-item" type="button" role="tab" aria-selected="false">

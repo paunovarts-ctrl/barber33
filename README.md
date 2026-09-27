@@ -35,11 +35,20 @@ is holding in August.
 
 ## Photos
 
-- `assets/hero-*.jpg` is the room. It opens the hero stage and is the only
-  landscape shot.
+- `assets/hero-*.jpg` is the room. It is the hero's backdrop, blended into
+  the green field rather than laid on top of it.
 - `assets/work-*.jpg` are the four cuts, at 560 and 900 for the gallery and
   at 1200 for the hero stage, cropped to a uniform 3:4 so the gallery row is
   never ragged.
+
+The backdrop is `mix-blend-mode: luminosity`, so it keeps the photograph's
+light and takes the field's colour: the room arrives already green instead of
+being a picture sitting on a green page. A two-part mask thins it toward the
+words and empties it at the bottom, so the hero has no edge to end on.
+`brightness(.42)` pulls the whole image down before opacity lifts it back up,
+which tames the lamp — the brightest thing in the frame, and it lands exactly
+where the text is. That one filter is the difference between the field behind
+the lede measuring 2.9:1 and 5.2:1.
 
 The hero stage and the rail beneath it are one control: whichever rail item
 is on, that shot is on. Adding a sixth means one more `<img class="stage-shot">`
