@@ -13,8 +13,10 @@ a cut costs, and which way to walk.
 The phone, the address and the opening hours are in. What is left:
 
 1. **The Instagram handle**, in the `SHOP` object at the foot of
-   `index.html`. It is the only empty field; while it stays empty the site
-   drops that row rather than linking somewhere wrong.
+   `index.html`. It is the only empty field, and two things wait on it: the
+   contact row, and the tag in the corner of the hero stage that sends
+   anyone who likes the four cuts to the rest of them. While it stays empty
+   both take themselves off the page rather than link somewhere wrong.
 2. **Sunday.** The hours came from a listing that was cut off after
    Saturday, so Sunday is set closed on an assumption and nothing else.
 3. **The prices and durations** in the Cjenik section, which are still the
@@ -37,27 +39,32 @@ is holding in August.
 
 - `assets/hero-*.jpg` is the room. It is the hero's backdrop, blended into
   the green field rather than laid on top of it.
-- `assets/work-*.jpg` are the four cuts, at 560 and 900 for the gallery and
-  at 1200 for the hero stage, cropped to a uniform 3:4 so the gallery row is
-  never ragged.
+- `assets/work-*-1200.jpg` are the four cuts, cropped to a uniform 3:4 so
+  the stage does not resize as it changes shot. One width only: the stage is
+  the single place they appear.
 
 The backdrop is `mix-blend-mode: luminosity`, so it keeps the photograph's
 light and takes the field's colour: the room arrives already green instead of
 being a picture sitting on a green page. A two-part mask thins it toward the
 words and empties it at the bottom, so the hero has no edge to end on.
 `brightness(.42)` pulls the whole image down before opacity lifts it back up,
-which tames the lamp — the brightest thing in the frame, and it lands exactly
+which tames the lamp, the brightest thing in the frame, and it lands exactly
 where the text is. That one filter is the difference between the field behind
 the lede measuring 2.9:1 and 5.2:1.
 
 The hero stage and the rail beneath it are one control: whichever rail item
-is on, that shot is on. Adding a sixth means one more `<img class="stage-shot">`
-and one more `.rail-item`, in the same order. The rail's names are read off
-the photographs rather than told to us by the shop.
+is on, that shot is on. Adding a fifth means one more
+`<img class="stage-shot">` and one more `.rail-item`, in the same order. The
+rail's names are read off the photographs rather than told to us by the shop.
+
+The stage carries the Instagram tag because that is where the work is. The
+page shows four cuts and then points at the account instead of growing a
+gallery: a gallery is a page someone has to scroll, and the four best shots
+already said it.
 
 To swap any of them, drop the new picture in and re-run the resizer used to
-make them (three widths for the hero, two for a gallery tile). Keep the
-gallery at 3:4.
+make them: 3:4 at 1200 wide for a stage shot, and 900/1400/2000 for the
+backdrop.
 
 ## The logo
 
