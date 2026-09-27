@@ -11,7 +11,7 @@ files into that cache directory named <slug>.png or <slug>.jpg first.
 The URLs below are OpenArt CDN links for one account's generations. If they
 have expired, regenerate and replace them; everything downstream is unchanged.
 """
-import pathlib, re, subprocess, sys
+import pathlib, re, sys, urllib.error, urllib.request
 from PIL import Image
 
 URLS = {
@@ -77,7 +77,11 @@ def main():
         src = local(slug)
         if src is None:
             dst = CACHE/(slug+".png")
-            subprocess.run(["curl", "-sSfL", "--max-time", "120", "-o", str(dst), url])
+            try:
+                with urllib.request.urlopen(url, timeout=120) as r:
+                    dst.write_bytes(r.read())
+            except (urllib.error.URLError, OSError) as e:
+                print("  %-14s %s" % (slug, e))
             src = local(slug)
             if src is None:
                 dst.unlink(missing_ok=True); missing.append(slug); continue
@@ -93,7 +97,7 @@ def main():
                  "Is cdn.openart.ai reachable? Otherwise drop the files into\n"
                  "%s as <slug>.png and run this again." % (", ".join(missing), CACHE))
 
-    html = ROOT/"index.html"; s = html.read_text(); n = 0
+    html = ROOT/"index.html"; s = html.read_text(encoding="utf-8"); n = 0
     for slug in URLS:
         # (?!-->) at every step keeps the match inside ONE comment. A plain
         # lazy .*? under DOTALL spans from the first card's comment to this
@@ -102,7 +106,7 @@ def main():
                          r'(<img src="assets/menu-%s\.jpg"(?:(?!-->)[\s\S])*?>)'
                          r'\s*-->' % re.escape(slug))
         s, k = pat.subn(lambda m: m.group(1), s); n += k
-    html.write_text(s)
+    html.write_text(s, encoding="utf-8", newline="\n")
     print("\nswitched on %d of %d cards (already-live cards count 0)" % (n, len(URLS)))
 
 
