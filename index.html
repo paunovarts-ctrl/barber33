@@ -9,13 +9,16 @@
 
      FILL IN BEFORE GOING LIVE. Search the file for "FILL":
 
-       1. the SHOP object at the foot of this file: phone, address,
-          Instagram. It drives every call button, every directions
-          link and the contact block. Leave a field empty and the
-          site stops offering that button rather than dialling a
-          wrong number.
+       1. the SHOP object at the foot of this file. Phone and
+          address are in; the Instagram handle is still empty, and
+          an empty field means the site drops that row rather than
+          linking somewhere wrong.
        2. the JSON-LD block below, the same facts again, for
           Google's local results. Keep the two in step.
+
+       3. SUNDAY. The hours came from a listing that was cut off
+          after Saturday, so Sunday is set closed on an assumption
+          and nothing else.
      Also worth a second pair of eyes from the shop: the prices and
      durations, the opening hours table (the open/closed badge is
      computed from it), the quiet-times note, and the claim that the
@@ -71,16 +74,15 @@
   "paymentAccepted": "Cash, Credit Card",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "[ulica i kućni broj]",
+    "streetAddress": "Ul. Pietra Kandlera 6",
     "addressLocality": "Poreč",
     "postalCode": "52440",
     "addressRegion": "Istarska županija",
     "addressCountry": "HR"
   },
-  "telephone": "[+385 ...]",
+  "telephone": "+385 52 829 587",
   "openingHoursSpecification": [
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "20:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "14:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "09:00", "closes": "19:00" }
   ]
 }
 </script>
@@ -873,12 +875,12 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
             <tr><th data-en="Day">Dan</th><th style="text-align:right" data-en="Open">Otvoreno</th></tr>
           </thead>
           <tbody id="hoursBody">
-            <tr data-day="1" data-open="09:00" data-close="20:00"><td data-en="Monday">Ponedjeljak</td><td>09:00 – 20:00</td></tr>
-            <tr data-day="2" data-open="09:00" data-close="20:00"><td data-en="Tuesday">Utorak</td><td>09:00 – 20:00</td></tr>
-            <tr data-day="3" data-open="09:00" data-close="20:00"><td data-en="Wednesday">Srijeda</td><td>09:00 – 20:00</td></tr>
-            <tr data-day="4" data-open="09:00" data-close="20:00"><td data-en="Thursday">Četvrtak</td><td>09:00 – 20:00</td></tr>
-            <tr data-day="5" data-open="09:00" data-close="20:00"><td data-en="Friday">Petak</td><td>09:00 – 20:00</td></tr>
-            <tr data-day="6" data-open="08:00" data-close="14:00"><td data-en="Saturday">Subota</td><td>08:00 – 14:00</td></tr>
+            <tr data-day="1" data-open="09:00" data-close="19:00"><td data-en="Monday">Ponedjeljak</td><td>09:00 – 19:00</td></tr>
+            <tr data-day="2" data-open="09:00" data-close="19:00"><td data-en="Tuesday">Utorak</td><td>09:00 – 19:00</td></tr>
+            <tr data-day="3" data-open="09:00" data-close="19:00"><td data-en="Wednesday">Srijeda</td><td>09:00 – 19:00</td></tr>
+            <tr data-day="4" data-open="09:00" data-close="19:00"><td data-en="Thursday">Četvrtak</td><td>09:00 – 19:00</td></tr>
+            <tr data-day="5" data-open="09:00" data-close="19:00"><td data-en="Friday">Petak</td><td>09:00 – 19:00</td></tr>
+            <tr data-day="6" data-open="09:00" data-close="19:00"><td data-en="Saturday">Subota</td><td>09:00 – 19:00</td></tr>
             <tr data-day="0"><td data-en="Sunday">Nedjelja</td><td class="shut" data-en="Closed">Zatvoreno</td></tr>
           </tbody>
         </table>
@@ -1009,14 +1011,16 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
      saying "add the number" rather than dialling something wrong.
      ========================================================= */
   var SHOP = {
-    phone:     '',                 // e.g. '+385 91 234 5678'
-    address:   '',                 // e.g. 'Ulica Marafor 33'
+    /* Written international rather than as the local 052 829 587. Both
+       dial from a Croatian phone, but only this one dials from the
+       German or Italian handset half of Poreč is holding in August. */
+    phone:     '+385 52 829 587',
+    address:   'Ul. Pietra Kandlera 6',
     instagram: '',                 // handle only, e.g. 'barber33.porec'
-    /* Searched rather than pinned: a name and a town land on the right
-       door once the shop is on the map, and a guessed coordinate does
-       not. Swap for 'lat,lng' the day someone stands outside with a
-       phone and reads one off. */
-    maps:      'Barber 33, Poreč'
+    /* Name and street together, so the pin lands on the door rather than
+       on the street. Swap for 'lat,lng' the day someone stands outside
+       with a phone and reads one off. */
+    maps:      'Barber 33, Ul. Pietra Kandlera 6, 52440 Poreč'
   };
 
   var $  = function(s, r){ return (r||document).querySelector(s); };

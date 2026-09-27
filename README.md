@@ -10,26 +10,28 @@ a cut costs, and which way to walk.
 
 ## Before it goes live
 
-Two places hold everything the shop still has to confirm. Both are marked
-`FILL` in `index.html`:
+The phone, the address and the opening hours are in. What is left:
 
-1. **`SHOP`**, at the top of the script at the bottom of the file: phone,
-   street address, Instagram handle. Every call button, every maps link and
-   the contact block read from here, so it is the only place to type them.
-   A field left empty is handled rather than faked: the call buttons
-   disappear instead of offering a dead link, and the contact row keeps
-   saying *upiši broj* so nobody ships the site without noticing.
-2. **The JSON-LD block** in `<head>`, the same address and phone again, this
-   time for Google's local results. Keep it in step with `SHOP`.
+1. **The Instagram handle**, in the `SHOP` object at the foot of
+   `index.html`. It is the only empty field; while it stays empty the site
+   drops that row rather than linking somewhere wrong.
+2. **Sunday.** The hours came from a listing that was cut off after
+   Saturday, so Sunday is set closed on an assumption and nothing else.
+3. **The prices and durations** in the Cjenik section, which are still the
+   plausible-guess ones.
+4. **The quiet-times note** beside the hours, and *Hrvatski i engleski* in
+   the Što radimo cards. Both are claims about the shop that the shop has
+   not confirmed.
 
-Worth a second pair of eyes from the shop as well:
+`SHOP` is the only place the phone and address are written; every call
+button, every maps link and the contact block read from it. The JSON-LD
+block in `<head>` carries the same facts for Google's local results, so
+keep the two in step.
 
-- the prices and durations in the **Cjenik** section
-- the **opening hours table**, because the open/closed badge at the top of the page
-  is computed from its `data-open` / `data-close` attributes, so an hour
-  wrong there is wrong in two places
-- the quiet-times note beside the hours
-- *Hrvatski i engleski* in the **Što radimo** cards
+The phone is stored international (`+385 52 829 587`) rather than as the
+local `052 829 587`. Both dial from a Croatian phone, but only the
+international form dials from the German or Italian handset half of Poreč
+is holding in August.
 
 ## Photos
 
