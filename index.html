@@ -314,6 +314,17 @@ header{
   padding-top:env(safe-area-inset-top);
 }
 header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
+/* The hairline says where the header ends; this says the header is in front.
+   A blurred bar stopping at a 1px line reads as a drawn strip, while a short
+   fade under it reads as a pane the page is passing behind, which matters
+   most where the photograph scrolls under. It costs nothing until there is
+   something underneath to be in front of. */
+header::after{
+  content:'';position:absolute;left:0;right:0;top:100%;height:18px;
+  background:linear-gradient(to bottom,rgba(10,11,12,.5),rgba(10,11,12,0));
+  opacity:0;transition:opacity 300ms ease;pointer-events:none;
+}
+header.stuck::after{opacity:1;}
 /* Reading progress. scaleX only, so it never costs a layout. */
 .progress{
   position:absolute;left:0;right:0;bottom:-1px;height:2px;
@@ -346,6 +357,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   .hd nav a:hover{color:var(--cream);}
   .hd nav a:hover::after{transform:scaleX(1);transform-origin:left;}
 }
+.hd nav a:active{color:var(--cream);}
 @media (max-width:980px){ .hd nav{display:none;} }
 @media (max-width:430px){ .hd .btn-face{padding:12px 15px;} .hd .btn-face span{display:none;} }
 .hd .btn-face{padding:12px 19px;font-size:12.5px;}
@@ -415,15 +427,22 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   grid-area:stage;position:relative;overflow:hidden;min-height:340px;
   border-left:1px solid var(--rule);background:#0d211d;
 }
-/* The shots stack, so the outgoing one can fade while the next is already
-   settling back from its push. Swapping the src would flash instead. */
-.stage-shot{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  object-position:50% 34%;
-  opacity:0;transform:scale(1.05);
-  transition:opacity 650ms var(--out), transform 900ms var(--out);
+/* The shots sit side by side on a track the finger moves, rather than
+   crossfading in place. A crossfade cannot be dragged: to feel like a thing
+   rather than a slideshow the picture has to travel with the thumb, 1:1, the
+   whole way. It also puts the content on the same axis as the rail below it,
+   so tapping the third name visibly travels two shots to get there. */
+.stage-track{
+  position:absolute;inset:0;display:flex;
+  touch-action:pan-y;   /* the page still scrolls vertically through the stage */
+  cursor:grab;
 }
-.stage-shot.on{opacity:1;transform:none;}
+.stage-track.grabbing{cursor:grabbing;}
+.stage-shot{
+  flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:50% 34%;
+  /* the track is the drag target; the browser's own image drag is not wanted */
+  pointer-events:none;user-select:none;-webkit-user-drag:none;
+}
 
 /* The stage is the shop's work, and the rest of it is on Instagram. The tag
    says so from the corner of the picture rather than from a row of its own.
@@ -456,6 +475,9 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   transition:background 240ms ease, color 240ms ease;
 }
 .rail-item:first-child{border-left:0;}
+/* Pressing is the moment the user is watching, so the highlight lands on
+   pointer-down with no ramp; letting go can take its time. */
+.rail-item:active{background:rgba(246,242,234,.13);transition-duration:60ms;}
 .rail-item.on{color:var(--cream);}
 /* The marker sits on the rail's own top rule rather than beside it. */
 .rail-item.on::before{
@@ -782,7 +804,29 @@ footer{border-top:1px solid var(--rule);}
   .ready .rise,[data-reveal].in{transition:opacity 260ms ease var(--d,0ms);transform:none;}
   .btn-fill{transition:opacity 160ms ease;clip-path:none;opacity:0;}
   .btn:hover .btn-fill{opacity:1;}
-  .stage-shot,.stage-shot.on{transform:none;}
+  /* Dragging the stage is the user's own movement, not motion done at them,
+     so it stays. Only the spring that flies it home is dropped. */
+  .stage-track{transition:none;}
+}
+/* Asked for more contrast, the page stops relying on faint hairlines and
+   translucency to do its separating: the rules come up from 11% to 34%, the
+   muted grey goes from 5.9:1 to 9.3:1 against its field, and every frosted
+   surface turns solid with a border it can be told apart by. */
+@media (prefers-contrast:more){
+  :root{
+    --line:rgba(246,242,234,.34);--line-2:rgba(246,242,234,.22);
+    --rule:rgba(246,242,234,.34);--muted:#BDB5A9;
+  }
+  .hero{--rule:rgba(246,242,234,.4);}
+  .onwall{--rule:rgba(246,242,234,.4);}
+  header,header.stuck{background:var(--ink);backdrop-filter:none;
+    border-bottom:1px solid var(--line);}
+  .callbar{background:var(--ink);backdrop-filter:none;}
+  .status,.btn-2{backdrop-filter:none;}
+  .btn-2{border-color:var(--cream);}
+  .stage-ig{backdrop-filter:none;background:#06201a;border-color:var(--cream);}
+  .svc-ghost{opacity:.3;}
+  .hero-bg img{opacity:.34;}
 }
 @media (prefers-reduced-transparency:reduce){
   .hero-bg{display:none;}
@@ -897,6 +941,7 @@ footer{border-top:1px solid var(--rule);}
          FILL: the rail's names are read off the photographs, not told to
          me by the shop. -->
     <div class="hero-stage rise" style="--d:300ms">
+      <div class="stage-track" id="track">
       <img class="stage-shot on" src="assets/work-1-1200.jpg" decoding="async"
            width="1200" height="1600" alt="Teksturirano šišanje s niskim fadeom">
       <img class="stage-shot" src="assets/work-2-1200.jpg" loading="lazy" decoding="async"
@@ -905,6 +950,7 @@ footer{border-top:1px solid var(--rule);}
            width="1200" height="1600" alt="Visoki fade s izbrijanom linijom i oblikovanom bradom">
       <img class="stage-shot" src="assets/work-4-1200.jpg" loading="lazy" decoding="async"
            width="1200" height="1600" alt="Klasično šišanje s izbrijanom linijom">
+      </div>
       <a class="stage-ig" data-shop="ig-stage" href="#kontakt">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
         <span data-shop="ig-handle">Instagram</span>
@@ -1565,19 +1611,154 @@ footer{border-top:1px solid var(--rule);}
   /* The rail and the stage are one control: whichever rail item is on,
      that shot is on. Nothing here reads the DOM for state, so the two can
      never disagree. */
+  /* ---------- the stage ----------
+     The rail and the pictures are one control, so the pictures move the way
+     the rail runs: sideways, glued to the finger for the whole gesture rather
+     than animating once it ends.
+
+     Three things make it feel like an object instead of a slideshow. Release
+     does not snap to whichever shot is nearest; it projects where the flick
+     was heading, the way a scroll decelerates, so a quick flick travels
+     further than a slow drag of the same length. The flick's speed is handed
+     to the spring that finishes the job, so there is no seam between dragging
+     and animating. And the spring integrates from wherever the track actually
+     is, which means grabbing it mid-flight picks it up at that point instead
+     of jumping to where the last animation thought it was. */
   function stage(){
-    var rail = $('#rail'); if(!rail) return;
-    var items = $$('.rail-item', rail), shots = $$('.stage-shot');
-    function show(i){
+    var rail = $('#rail'), track = $('#track');
+    if(!rail || !track) return;
+    var items = $$('.rail-item', rail), shots = $$('.stage-shot', track);
+    var n = shots.length; if(!n) return;
+
+    var idx = 0, x = 0, vx = 0, target = 0, raf = 0;
+    var drag = false, pid = null, axis = '', ox = 0, oy = 0, from = 0, hist = [];
+
+    function width(){ return track.getBoundingClientRect().width || 1; }
+    function paint(){ track.style.transform = 'translate3d(' + (-x) + 'px,0,0)'; }
+
+    function mark(i){
+      idx = i;
       items.forEach(function(el, k){
         el.classList.toggle('on', k === i);
         el.setAttribute('aria-selected', k === i ? 'true' : 'false');
+        el.tabIndex = k === i ? 0 : -1;
       });
       shots.forEach(function(el, k){ el.classList.toggle('on', k === i); });
     }
-    items.forEach(function(el, i){
-      el.addEventListener('click', function(){ show(i); });
+
+    /* Critically damped: it arrives without overshooting, because overshoot
+       here would show the neighbouring photograph peeking in and back out. */
+    var RESPONSE = 0.38, ZETA = 1, last = 0;
+    function tick(now){
+      var dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+      var w = 2 * Math.PI / RESPONSE;
+      vx += (-w * w * (x - target) - 2 * ZETA * w * vx) * dt;
+      x  += vx * dt;
+      if(Math.abs(x - target) < 0.4 && Math.abs(vx) < 12){
+        x = target; vx = 0; paint();
+        raf = 0; track.style.willChange = '';
+        return;
+      }
+      paint();
+      raf = requestAnimationFrame(tick);
+    }
+    function settle(){
+      if(raf) return;
+      track.style.willChange = 'transform';
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+
+    function go(i, v){
+      mark(Math.max(0, Math.min(n - 1, i)));
+      target = idx * width();
+      vx = v || 0;
+      if(STILL.matches){
+        if(raf) cancelAnimationFrame(raf);
+        raf = 0; x = target; vx = 0; paint(); track.style.willChange = '';
+        return;
+      }
+      settle();
+    }
+
+    /* Past either end the track keeps moving, but less the further it goes. A
+       hard stop reads as frozen; resistance reads as "there is nothing more
+       this way". */
+    function rubber(over, dim){
+      return (over * dim * 0.55) / (dim + 0.55 * Math.abs(over));
+    }
+
+    track.addEventListener('pointerdown', function(e){
+      if(e.button) return;
+      if(raf){ cancelAnimationFrame(raf); raf = 0; }   /* grab it where it is */
+      drag = true; axis = ''; pid = e.pointerId;
+      ox = e.clientX; oy = e.clientY; from = x; vx = 0;
+      hist = [{ x: e.clientX, t: performance.now() }];
     });
+
+    track.addEventListener('pointermove', function(e){
+      if(!drag || e.pointerId !== pid) return;
+      var dx = e.clientX - ox, dy = e.clientY - oy;
+      if(!axis){
+        /* Below ten pixels this could still become a page scroll, and taking
+           it then would trap the page. Decide once, then commit. */
+        if(Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+        if(Math.abs(dx) <= Math.abs(dy)){ drag = false; return; }
+        axis = 'x';
+        track.setPointerCapture(pid);
+        track.classList.add('grabbing');
+        track.style.willChange = 'transform';
+        /* Re-anchor on the pixel that proved intent. Without this the ten
+           pixels spent deciding are also applied as position, and the picture
+           jumps that far the instant the drag is recognised. */
+        ox = e.clientX; from = x;
+        hist = [{ x: e.clientX, t: performance.now() }];
+        return;
+      }
+      var w = width(), max = (n - 1) * w, p = from - dx;
+      if(p < 0) p = -rubber(-p, w);
+      else if(p > max) p = max + rubber(p - max, w);
+      x = p; paint();
+      hist.push({ x: e.clientX, t: performance.now() });
+      if(hist.length > 6) hist.shift();
+    });
+
+    function release(e){
+      if(!drag || (pid !== null && e.pointerId !== pid)) return;
+      drag = false;
+      track.classList.remove('grabbing');
+      try{ track.releasePointerCapture(pid); }catch(err){}
+      pid = null;
+      if(axis !== 'x'){ track.style.willChange = ''; return; }
+
+      var w = width(), a = hist[0], b = hist[hist.length - 1];
+      var v = -((b.x - a.x) / Math.max(b.t - a.t, 1)) * 1000;   /* track px/s */
+      /* Where a scroll with this speed would have come to rest. */
+      var projected = x + v * 0.499;
+      go(Math.round(projected / w), v);
+    }
+    track.addEventListener('pointerup', release);
+    track.addEventListener('pointercancel', release);
+
+    items.forEach(function(el, i){
+      el.addEventListener('click', function(){ go(i, 0); });
+    });
+    /* A tablist is arrow-key navigable, and the rail is one. */
+    rail.addEventListener('keydown', function(e){
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if(!d) return;
+      e.preventDefault();
+      var i = Math.max(0, Math.min(n - 1, idx + d));
+      go(i, 0);
+      items[i].focus();
+    });
+
+    addEventListener('resize', function(){
+      if(raf){ cancelAnimationFrame(raf); raf = 0; track.style.willChange = ''; }
+      x = target = idx * width(); vx = 0; paint();
+    });
+
+    mark(0); paint();
   }
 
   /* =========================================================

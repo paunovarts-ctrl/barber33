@@ -157,6 +157,25 @@ read as a border around the page rather than as a grid holding it together.
   visitor's, because in August a good share of the people reading this are on a
   phone still set to Munich. Closed is never just "closed": it says when the
   door opens again.
+- **The hero stage is draggable**, not a slideshow. The shots ride a track
+  that follows the finger 1:1 for the whole gesture, on the same axis as the
+  rail that labels them, so tapping the third name visibly travels two shots
+  to get there.
+
+  Three details make it feel like an object. Release does not snap to the
+  nearest shot: it projects where the flick was heading the way a scroll
+  decelerates, so 120px thrown at 999px/s lands a shot further along than the
+  same 120px dragged at 172. The flick's speed is handed to the spring that
+  finishes the job, so there is no seam between dragging and animating. And
+  the spring integrates from wherever the track actually is, so grabbing it
+  mid-flight picks it up at that exact pixel rather than jumping.
+
+  Past either end it resists instead of stopping: 300px of pull yields 126 of
+  travel. A wall reads as broken, resistance reads as nothing more this way.
+  Vertical drags are left alone until ten pixels prove the gesture is
+  horizontal, so the page still scrolls through the stage, and those ten
+  pixels are re-anchored rather than applied, or the picture would jump that
+  far the moment the drag was recognised.
 - **The call bar** on a phone keeps the number and the directions within
   thumb reach the whole way down the page.
 - **The loading screen** covers the moment before the hero photograph has
@@ -166,7 +185,13 @@ read as a border around the page rather than as a grid holding it together.
 - **Motion** is gated: every animation stops under
   `prefers-reduced-motion`, every hover effect is behind `(hover: hover)`,
   and the translucent chrome turns solid under
-  `prefers-reduced-transparency`.
+  `prefers-reduced-transparency`. Dragging the stage survives reduced motion,
+  because that is the user's own movement rather than motion done at them;
+  only the spring that flies it home is dropped.
+- **`prefers-contrast: more`** stops the page leaning on faint hairlines and
+  translucency to do its separating. The rules go from 11% to 34%, the muted
+  grey from 5.9:1 to 9.3:1 against its field, and every frosted surface turns
+  solid with a border it can be told apart by.
 
 ## Running it locally
 
