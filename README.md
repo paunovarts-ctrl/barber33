@@ -157,13 +157,27 @@ read as a border around the page rather than as a grid holding it together.
   visitor's, because in August a good share of the people reading this are on a
   phone still set to Munich. Closed is never just "closed": it says when the
   door opens again.
-- **The hero stage is draggable**, not a slideshow. The shots ride a track
-  that follows the finger 1:1 for the whole gesture, on the same axis as the
-  rail that labels them, so tapping the third name visibly travels two shots
-  to get there.
+- **The hero stage moves on its own and can still be grabbed.** It advances
+  every 4.6 seconds, and the shots ride a track that follows the finger 1:1
+  for the whole gesture, so it is a thing you can take hold of rather than a
+  slideshow you watch.
 
-  Three details make it feel like an object. Release does not snap to the
-  nearest shot: it projects where the flick was heading the way a scroll
+  It stops whenever nobody is watching it: under a finger, under the pointer,
+  while the tab is in the background, and while the hero is scrolled past. A
+  carousel ticking over in a tab nobody is looking at is only battery.
+  Stopping freezes rather than resets, so the bar holds at the fraction it had
+  reached and the countdown keeps the matching remainder; letting go resumes
+  instead of starting the shot over. The first shot's clock does not start
+  until the loading screen lifts, or it would spend its turn behind the cover:
+  measured at 4601ms of its 4600ms.
+
+  Four hairlines along the bottom say where it is up to, the current one
+  filling as its time runs down. They are an indicator and not a control,
+  since the labels were what you asked to remove. The arrow keys move it, so
+  what the labels could do is not lost.
+
+  Three details make the drag feel like an object. Release does not snap to
+  the nearest shot: it projects where the flick was heading the way a scroll
   decelerates, so 120px thrown at 999px/s lands a shot further along than the
   same 120px dragged at 172. The flick's speed is handed to the spring that
   finishes the job, so there is no seam between dragging and animating. And
