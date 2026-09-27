@@ -35,9 +35,16 @@ is holding in August.
 
 ## Photos
 
-- `assets/hero-*.jpg` is the room, one photograph at three widths.
-- `assets/work-*.jpg` are the four cuts in the gallery, each at two widths,
-  cropped to a uniform 3:4 so the row is never ragged.
+- `assets/hero-*.jpg` is the room. It opens the hero stage and is the only
+  landscape shot.
+- `assets/work-*.jpg` are the four cuts, at 560 and 900 for the gallery and
+  at 1200 for the hero stage, cropped to a uniform 3:4 so the gallery row is
+  never ragged.
+
+The hero stage and the rail beneath it are one control: whichever rail item
+is on, that shot is on. Adding a sixth means one more `<img class="stage-shot">`
+and one more `.rail-item`, in the same order. The rail's names are read off
+the photographs rather than told to us by the shop.
 
 To swap any of them, drop the new picture in and re-run the resizer used to
 make them (three widths for the hero, two for a gallery tile). Keep the

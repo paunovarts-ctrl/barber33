@@ -45,8 +45,8 @@
      loading screen waits on it; without this the browser does not go looking
      for it until it has parsed the stylesheet. -->
 <link rel="preload" as="image" href="assets/hero-1400.jpg"
-      imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
-      imagesizes="100vw" fetchpriority="high">
+      imagesrcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w"
+      imagesizes="(max-width:860px) 100vw, 50vw" fetchpriority="high">
 
 <meta property="og:type" content="business.business">
 <meta property="og:title" content="Barber 33, walk-in barbershop u Poreču">
@@ -365,37 +365,81 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    HERO
    ========================================================= */
 .hero{
+  /* A flat field with the pictures framed on the right, rather than one
+     photograph washed out behind everything. The field is the shop's own
+     deep wall, so the room is still the backdrop, just not at 10% through
+     a scrim. The photograph it used to be is the first thing on the
+     stage now. */
+  --rule:rgba(246,242,234,.17);
   position:relative;overflow:hidden;
   display:flex;align-items:stretch;
-  min-height:min(88vh,860px);
+  min-height:min(86vh,820px);
+  background:var(--green);
 }
-.hero-bg{position:absolute;inset:-6% 0;}
-.hero-bg img{
-  width:100%;height:100%;object-fit:cover;
-  /* Favours the chairs. A phone crops this hard enough to lose them
-     altogether if it is left centred on the sofa. */
-  object-position:64% 50%;
-  will-change:transform;
+.hero-grid{
+  flex:1;display:grid;margin-inline:calc(var(--gut) * -1);
+  grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  grid-template-rows:1fr auto;
+  grid-template-areas:"left stage" "rail rail";
 }
-.hero-bg::after{
-  content:'';position:absolute;inset:0;
-  background:
-    linear-gradient(103deg, rgba(8,9,10,.95) 0%, rgba(8,9,10,.86) 30%,
-                            rgba(8,9,10,.44) 64%, rgba(8,9,10,.32) 100%),
-    linear-gradient(to top, #0A0B0C 0%, rgba(10,11,12,.2) 34%, rgba(10,11,12,0) 62%);
+.hero-left{
+  grid-area:left;padding:clamp(36px,5vw,64px) var(--gut);
+  display:flex;flex-direction:column;justify-content:center;min-width:0;
 }
-.hero-inner{
-  position:relative;z-index:1;width:100%;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding-block:clamp(56px,10vw,120px) clamp(44px,6vw,84px);
+.hero-stage{
+  grid-area:stage;position:relative;overflow:hidden;min-height:340px;
+  border-left:1px solid var(--rule);background:#0d211d;
 }
-.hero h1{margin:18px 0 0;}
+/* The shots stack, so the outgoing one can fade while the next is already
+   settling back from its push. Swapping the src would flash instead. */
+.stage-shot{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:50% 34%;
+  opacity:0;transform:scale(1.05);
+  transition:opacity 650ms var(--out), transform 900ms var(--out);
+}
+.stage-shot.on{opacity:1;transform:none;}
+
+.hero-rail{
+  grid-area:rail;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
+  border-top:1px solid var(--rule);
+}
+.rail-item{
+  position:relative;padding:17px var(--gut) 19px;text-align:left;cursor:pointer;
+  background:none;border:0;border-left:1px solid var(--rule);
+  color:var(--cream-2);font-family:var(--body);
+  transition:background 240ms ease, color 240ms ease;
+}
+.rail-item:first-child{border-left:0;}
+.rail-item.on{color:var(--cream);}
+/* The marker sits on the rail's own top rule rather than beside it. */
+.rail-item.on::before{
+  content:'';position:absolute;inset:-1px 0 auto 0;height:2px;background:var(--acc-2);
+}
+.rail-name{
+  display:block;font:600 13.5px/1.2 var(--display);
+  letter-spacing:.09em;text-transform:uppercase;
+}
+@media (hover:hover) and (pointer:fine){
+  .rail-item:hover{background:rgba(246,242,234,.06);color:var(--cream);}
+}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr;grid-template-areas:"left" "stage" "rail";}
+  .hero-stage{border-left:0;border-top:1px solid var(--rule);aspect-ratio:4/3;min-height:0;}
+  /* A column of five would own the screen; they scroll sideways instead. */
+  .hero-rail{grid-auto-columns:minmax(40%,1fr);overflow-x:auto;scrollbar-width:none;}
+  .hero-rail::-webkit-scrollbar{display:none;}
+}
+.hero > .wrap{padding-block:0;}
+.hero-inner{position:relative;z-index:1;width:100%;display:flex;}
+.hero h1{margin:16px 0 0;font-size:clamp(34px,4.4vw,62px);}
 /* Each line rides up out of its own clipped box. */
 .line{display:block;overflow:hidden;padding-bottom:.04em;}
 .line > span{display:block;transform:translateY(105%);}
 .ready .line > span{transform:translateY(0);
   transition:transform 780ms var(--out) var(--d,0ms);}
-.hero h1 em{font-style:normal;color:var(--acc);}
+.hero h1 em{font-style:normal;color:var(--acc-2);}
+.hero .eyebrow{color:var(--acc-2);}
 .hero .lede{margin-top:22px;max-width:31em;}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;}
 
@@ -666,7 +710,7 @@ footer{border-top:1px solid var(--rule);}
   .tile img,.tile.in img{transform:none;transition:none;}
   .btn-fill{transition:opacity 160ms ease;clip-path:none;opacity:0;}
   .btn:hover .btn-fill{opacity:1;}
-  .hero-bg img{transform:none !important;}
+  .stage-shot,.stage-shot.on{transform:none;}
 }
 @media (prefers-reduced-transparency:reduce){
   header,header.stuck{background:var(--ink);backdrop-filter:none;}
@@ -726,13 +770,9 @@ footer{border-top:1px solid var(--rule);}
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="top">
-  <div class="hero-bg" aria-hidden="true">
-    <img id="heroImg" src="assets/hero-1400.jpg"
-         srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w, assets/hero-2000.jpg 2000w"
-         sizes="100vw" width="2000" height="1493" alt=""
-         fetchpriority="high" decoding="async">
-  </div>
   <div class="wrap hero-inner">
+   <div class="hero-grid">
+    <div class="hero-left">
     <span class="eyebrow rise" style="--d:340ms" data-en="Barbershop · Poreč">Barbershop · Poreč</span>
     <h1>
       <span class="line" style="--d:80ms"><span data-en="No appointments.">Bez naručivanja.</span></span>
@@ -772,6 +812,44 @@ footer{border-top:1px solid var(--rule);}
         <span id="statusTxt">Radno vrijeme</span>
       </span>
     </p>
+    </div>
+
+    <!-- The stage. The room first, then four cuts that left this chair.
+         FILL: the rail's names are read off the photographs, not told to
+         me by the shop. -->
+    <div class="hero-stage rise" style="--d:300ms">
+      <img class="stage-shot on" id="heroImg" src="assets/hero-1400.jpg"
+           srcset="assets/hero-900.jpg 900w, assets/hero-1400.jpg 1400w"
+           sizes="(max-width:860px) 100vw, 50vw" width="1400" height="1045"
+           alt="Barber 33, Poreč" fetchpriority="high" decoding="async">
+      <img class="stage-shot" src="assets/work-1-1200.jpg" loading="lazy" decoding="async"
+           width="1200" height="1600" alt="Teksturirano šišanje s niskim fadeom">
+      <img class="stage-shot" src="assets/work-2-1200.jpg" loading="lazy" decoding="async"
+           width="1200" height="1600" alt="Fade s plavo obojanim vrhom">
+      <img class="stage-shot" src="assets/work-3-1200.jpg" loading="lazy" decoding="async"
+           width="1200" height="1600" alt="Visoki fade s izbrijanom linijom i oblikovanom bradom">
+      <img class="stage-shot" src="assets/work-4-1200.jpg" loading="lazy" decoding="async"
+           width="1200" height="1600" alt="Klasično šišanje s izbrijanom linijom">
+    </div>
+
+    <div class="hero-rail" id="rail" role="tablist">
+      <button class="rail-item on" type="button" role="tab" aria-selected="true">
+        <span class="rail-name" data-en="The shop">Salon</span>
+      </button>
+      <button class="rail-item" type="button" role="tab" aria-selected="false">
+        <span class="rail-name" data-en="Fade">Fade</span>
+      </button>
+      <button class="rail-item" type="button" role="tab" aria-selected="false">
+        <span class="rail-name" data-en="Colour">Boja</span>
+      </button>
+      <button class="rail-item" type="button" role="tab" aria-selected="false">
+        <span class="rail-name" data-en="Beard">Brada</span>
+      </button>
+      <button class="rail-item" type="button" role="tab" aria-selected="false">
+        <span class="rail-name" data-en="Classic">Klasika</span>
+      </button>
+    </div>
+   </div>
   </div>
 </section>
 
@@ -1318,6 +1396,24 @@ footer{border-top:1px solid var(--rule);}
     t.appendChild(a); t.appendChild(b);
   }
 
+  /* The rail and the stage are one control: whichever rail item is on,
+     that shot is on. Nothing here reads the DOM for state, so the two can
+     never disagree. */
+  function stage(){
+    var rail = $('#rail'); if(!rail) return;
+    var items = $$('.rail-item', rail), shots = $$('.stage-shot');
+    function show(i){
+      items.forEach(function(el, k){
+        el.classList.toggle('on', k === i);
+        el.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      });
+      shots.forEach(function(el, k){ el.classList.toggle('on', k === i); });
+    }
+    items.forEach(function(el, i){
+      el.addEventListener('click', function(){ show(i); });
+    });
+  }
+
   /* =========================================================
      SCROLL
 
@@ -1326,7 +1422,7 @@ footer{border-top:1px solid var(--rule);}
      parallax all come off the same scroll position.
      ========================================================= */
   function scroller(){
-    var hdr = $('#hdr'), prog = $('#prog'), img = $('#heroImg'), hero = $('.hero');
+    var hdr = $('#hdr'), prog = $('#prog');
     var ticking = false, stuck = false;
 
     function frame(){
@@ -1340,12 +1436,6 @@ footer{border-top:1px solid var(--rule);}
       if(prog){
         var max = document.documentElement.scrollHeight - innerHeight;
         prog.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, y / max) : 0) + ')';
-      }
-      /* The photograph drifts at roughly a fifth of the page's speed. Its
-         wrapper is inset past the edges, so it never uncovers one. */
-      if(img && hero && !STILL.matches){
-        var h = hero.offsetHeight;
-        if(y < h) img.style.transform = 'translate3d(0,' + (y * 0.22) + 'px,0)';
       }
     }
     addEventListener('scroll', function(){
@@ -1421,6 +1511,7 @@ footer{border-top:1px solid var(--rule);}
 
   wire();
   ticker();
+  stage();
   reveals();
   scroller();
   if(LANG === 'en') applyLang(); else paintStatus();
