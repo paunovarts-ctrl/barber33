@@ -574,36 +574,79 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .onwall .eyebrow{color:var(--acc-2);}
 
 /* =========================================================
-   PRICE LIST
+   SERVICE MENU
+
+   A grid of cells rather than a column of dotted lines. Half the names
+   on a barber's list are trade words: "fade" and "britva" mean nothing
+   to someone who has never had one, and a photograph settles it faster
+   than a sentence can. The cells are divided by the same hairlines that
+   hold the rest of the page, so the menu reads as part of the grid
+   instead of a widget dropped into it.
+
+   The rules are borders on the cells, not gaps with a coloured grid
+   behind them. The gap trick is tidier to write, but these cells fade in
+   on scroll, and a cell at opacity 0 would stop covering the grid and
+   flash as a solid rule-coloured plate on its way in. A border belongs
+   to the cell, so it fades with it.
+
+   Cells 1 and 5 are the left column at four across and at two, so the
+   four-column rules stay true when the grid halves and only the middle
+   pair needs adding.
+
+   A cell with no photograph yet shows the shop's mark, ghosted: a
+   deliberate plate rather than a hole. Dropping an <img> into .svc-shot
+   covers it and nothing else has to change.
    ========================================================= */
-.prices{margin-inline:calc(var(--gut) * -1);border-top:1px solid var(--rule);}
-.row{
-  position:relative;display:flex;align-items:baseline;gap:12px;
-  padding:18px var(--gut);border-bottom:1px solid var(--rule);
+.menu{
+  --cell:clamp(13px,1.4vw,18px);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  margin-inline:calc(var(--gut) * -1);
+  border-top:1px solid var(--rule);
 }
-/* A hairline that draws itself under the row being read. */
-.row::after{
+.svc{
+  position:relative;min-width:0;display:flex;flex-direction:column;
+  border-left:1px solid var(--rule);border-bottom:1px solid var(--rule);
+}
+/* The outer columns take the page gutter so their text lines up with the
+   heading above; the inner ones take a caption's worth. */
+.svc:nth-child(4n+1){border-left:0;--pl:var(--gut);}
+.svc:nth-child(4n){--pr:var(--gut);}
+
+.svc-shot{
+  position:relative;aspect-ratio:3/2;overflow:hidden;
+  /* Lighter than the cell it sits in, not darker. A plate that falls away
+     into the page reads as a hole where a picture failed; one that lifts off
+     it reads as a panel waiting for one. */
+  background:linear-gradient(168deg,#1B1F23,#121518);
+  display:grid;place-items:center;
+}
+.svc-ghost{height:44%;width:auto;aspect-ratio:734/1408;color:var(--cream);opacity:.13;}
+.svc-shot img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform 700ms var(--out);
+}
+
+.svc-body{
+  flex:1;display:flex;flex-direction:column;
+  padding:15px var(--pr,var(--cell)) 17px var(--pl,var(--cell));
+}
+.svc-nm{font-size:16px;line-height:1.15;}
+.svc-meta{
+  margin-top:auto;padding-top:12px;display:flex;align-items:baseline;
+  justify-content:space-between;gap:10px;
+}
+.svc-mins{font:500 11px/1 var(--body);color:var(--muted);letter-spacing:.06em;flex:none;}
+.svc-amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--acc);flex:none;}
+
+/* The hairline that used to draw itself under the price row being read. */
+.svc::after{
   content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
   background:var(--acc);transform:scaleX(0);transform-origin:left;
   transition:transform 380ms var(--out);
 }
-.row .nm{font-weight:500;font-size:17px;}
-.row .mins{
-  font:500 12px/1 var(--body);color:var(--muted);letter-spacing:.06em;
-  border:1px solid var(--line);border-radius:999px;padding:5px 10px;flex:none;
-}
-.row .dots{flex:1;border-bottom:1px dotted rgba(246,242,234,.2);min-width:14px;
-  transform:translateY(-4px);}
-.row .amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--acc);flex:none;
-  transition:transform 380ms var(--out);}
 @media (hover:hover) and (pointer:fine){
-  .row:hover::after{transform:scaleX(1);}
-  .row:hover .amt{transform:translateX(-3px);}
-}
-@media (max-width:540px){
-  .row{flex-wrap:wrap;}
-  .row .nm{width:100%;}
-  .row .mins{order:1;} .row .dots{order:2;} .row .amt{order:3;}
+  .svc:hover::after{transform:scaleX(1);}
+  .svc:hover .svc-shot img{transform:scale(1.05);}
 }
 
 /* =========================================================
@@ -690,13 +733,28 @@ footer{border-top:1px solid var(--rule);}
   :root{--gut:18px;}
   .wrap{border-inline:0;}
 }
+@media (max-width:900px){
+  /* Half the columns. Only the new middle pair needs saying: cells 1, 4, 5
+     and 8 already sit against the right edge of the grid either way. */
+  .menu{grid-template-columns:repeat(2,1fr);}
+  .svc:nth-child(2n+1){border-left:0;--pl:var(--gut);}
+  .svc:nth-child(2n){--pr:var(--gut);}
+}
 @media (max-width:660px){
   .g3,.g4{grid-template-columns:1fr;}
   .grid{margin-inline:0;}
   .grid > *{padding-inline:0;border-left:0;border-top:1px solid var(--rule);}
   .grid > :first-child{border-top:0;padding-top:0;}
-  .prices{margin-inline:0;}
-  .row{padding-inline:0;}
+  /* One column, and the card turns on its side. Eight stacked cards with a
+     full-width photograph each would be most of a phone screen apiece; laid
+     across, the whole menu is one thumb's worth of scrolling and the picture
+     is still there. */
+  .menu{grid-template-columns:1fr;margin-inline:0;}
+  .menu .svc{flex-direction:row;border-left:0;--pl:15px;--pr:0px;}
+  .svc-shot{flex:none;width:104px;aspect-ratio:1;}
+  .svc-ghost{height:54%;}
+  .svc-body{justify-content:center;padding-block:13px;}
+  .svc-meta{margin-top:7px;padding-top:0;justify-content:flex-start;gap:16px;}
 }
 
 /* ---------- scroll reveals ---------- */
@@ -930,41 +988,156 @@ footer{border-top:1px solid var(--rule);}
       </p>
     </div>
 
-    <!-- FILL: prices and durations for the shop to confirm. -->
-    <div class="prices">
-      <div class="row" data-reveal style="--d:0ms">
-        <span class="nm" data-en="Haircut">Šišanje</span>
-        <span class="mins">30 min</span><span class="dots"></span><span class="amt">15 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:45ms">
-        <span class="nm" data-en="Cut, wash &amp; style">Šišanje, pranje i styling</span>
-        <span class="mins">40 min</span><span class="dots"></span><span class="amt">18 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:90ms">
-        <span class="nm" data-en="Skin fade">Fade</span>
-        <span class="mins">40 min</span><span class="dots"></span><span class="amt">18 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:135ms">
-        <span class="nm" data-en="Haircut + beard">Šišanje i brada</span>
-        <span class="mins">50 min</span><span class="dots"></span><span class="amt">22 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:180ms">
-        <span class="nm" data-en="Beard trim &amp; shape">Oblikovanje brade</span>
-        <span class="mins">20 min</span><span class="dots"></span><span class="amt">10 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:225ms">
-        <span class="nm" data-en="Hot-towel razor shave">Klasično brijanje britvom</span>
-        <span class="mins">30 min</span><span class="dots"></span><span class="amt">15 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:270ms">
-        <span class="nm" data-en="Head shave">Brijanje glave</span>
-        <span class="mins">25 min</span><span class="dots"></span><span class="amt">13 €</span>
-      </div>
-      <div class="row" data-reveal style="--d:315ms">
-        <span class="nm" data-en="Kids' cut (under 12)">Dječje šišanje (do 12 g.)</span>
-        <span class="mins">25 min</span><span class="dots"></span><span class="amt">12 €</span>
-      </div>
+    <!-- FILL: prices and durations for the shop to confirm.
+         PHOTOS: one per cell, assets/menu-<slug>.jpg, landscape 3:2 at 900x600.
+         Until a file is in, the cell shows the shop's mark ghosted. -->
+    <div class="menu">
+      <article class="svc" data-reveal style="--d:0ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-sisanje.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Haircut">Šišanje</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">30 min</span>
+            <span class="svc-amt">15 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:45ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-sisanje-pranje.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Cut, wash &amp; style">Šišanje, pranje i styling</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">40 min</span>
+            <span class="svc-amt">18 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:90ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-fade.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Skin fade">Fade</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">40 min</span>
+            <span class="svc-amt">18 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:135ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-sisanje-brada.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Haircut + beard">Šišanje i brada</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">50 min</span>
+            <span class="svc-amt">22 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:180ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-brada.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Beard trim &amp; shape">Oblikovanje brade</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">20 min</span>
+            <span class="svc-amt">10 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:225ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-britva.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Hot-towel razor shave">Klasično brijanje britvom</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">30 min</span>
+            <span class="svc-amt">15 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:270ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-glava.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Head shave">Brijanje glave</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">25 min</span>
+            <span class="svc-amt">13 €</span>
+          </div>
+        </div>
+      </article>
+      <article class="svc" data-reveal style="--d:315ms">
+        <div class="svc-shot">
+          <svg class="svc-ghost" viewBox="0 0 734 1408" aria-hidden="true"><use href="#b33mark"/></svg>
+          <!-- PHOTO: drop the file in and delete this comment's brackets. The alt
+               is empty on purpose: the name sits right beside it, so a screen
+               reader announcing the picture too would only say it twice.
+          <img src="assets/menu-djecje.jpg" width="900" height="600" alt=""
+               loading="lazy" decoding="async">
+          -->
+        </div>
+        <div class="svc-body">
+          <h3 class="svc-nm" data-en="Kids' cut (under 12)">Dječje šišanje (do 12 g.)</h3>
+          <div class="svc-meta">
+            <span class="svc-mins">25 min</span>
+            <span class="svc-amt">12 €</span>
+          </div>
+        </div>
+      </article>
     </div>
+
     <p class="muted" style="margin-top:22px" data-reveal data-en="Cash and cards both fine. Times are how long the chair is yours, not how long you wait.">
       Gotovina i kartice. Vrijeme uz uslugu je koliko je stolac tvoj, a ne koliko se čeka.
     </p>

@@ -21,7 +21,10 @@ The phone, the address and the opening hours are in. What is left:
    Saturday, so Sunday is set closed on an assumption and nothing else.
 3. **The prices and durations** in the Cjenik section, which are still the
    plausible-guess ones.
-4. **The quiet-times note** beside the hours, and *Hrvatski i engleski* in
+4. **The eight menu photographs**, `assets/menu-<slug>.jpg`. Until a file is
+   there the cell shows the shop's mark ghosted, which is a finished state,
+   not a broken one.
+5. **The quiet-times note** beside the hours, and *Hrvatski i engleski* in
    the Što radimo cards. Both are claims about the shop that the shop has
    not confirmed.
 
@@ -42,6 +45,9 @@ is holding in August.
 - `assets/work-*-1200.jpg` are the four cuts, cropped to a uniform 3:4 so
   the stage does not resize as it changes shot. One width only: the stage is
   the single place they appear.
+- `assets/menu-*.jpg` is one photograph per service, landscape 3:2 at
+  1200x800, named after its slug: `sisanje`, `sisanje-pranje`, `fade`,
+  `sisanje-brada`, `brada`, `britva`, `glava`, `djecje`.
 
 The backdrop is `mix-blend-mode: luminosity`, so it keeps the photograph's
 light and takes the field's colour: the room arrives already green instead of
@@ -65,6 +71,30 @@ already said it.
 To swap any of them, drop the new picture in and re-run the resizer used to
 make them: 3:4 at 1200 wide for a stage shot, and 900/1400/2000 for the
 backdrop.
+
+## The menu
+
+The price list is a grid of cells rather than a column of dotted lines,
+because half the names on a barber's list are trade words. "Fade" and
+"britva" mean nothing to someone who has never had one, and a photograph
+settles it faster than a sentence can.
+
+Four columns, then two, then one, and at one column the card turns on its
+side: eight stacked cards with a full-width photograph each would be most of
+a phone screen apiece, but laid across, the whole menu is one thumb's worth
+of scrolling and the picture is still there.
+
+The dividers are borders on the cells, not gaps with a coloured grid showing
+through behind them. The gap version is tidier to write, and it was what this
+started as, but the cells fade in on scroll and a cell at opacity 0 stops
+covering the grid: every card flashed as a solid rule-coloured plate on its
+way in. A border belongs to the cell, so it fades with it.
+
+A cell whose photograph has not arrived shows the shop's mark, ghosted, on a
+plate slightly lighter than the cell around it. Lighter rather than darker is
+the whole trick: a plate that falls away into the page reads as a hole where a
+picture failed, and one that lifts off it reads as a panel waiting for a
+picture.
 
 ## The logo
 
