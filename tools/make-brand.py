@@ -23,7 +23,7 @@ ASSETS = os.path.join(ROOT, 'assets')
 INK   = (10, 11, 12)
 GREEN = (18, 48, 42)
 CREAM = (246, 242, 234)
-BRASS = (200, 160, 70)
+ACCENT = (111, 181, 162)   # --acc, the lit wall green
 
 MASTER = Image.open(os.path.join(ASSETS, 'logo-mark.png'))   # white on transparent
 SS = 4                                                       # supersample factor
@@ -97,7 +97,7 @@ cd.text((X, 300), 'BARBER', font=B(108), fill=CREAM, anchor='ls')
 # "33" and the town share a baseline; the town is placed off the measured
 # width of the numerals so the two can never collide.
 f33 = B(108)
-cd.text((X, 424), '33', font=f33, fill=BRASS, anchor='ls')
+cd.text((X, 424), '33', font=f33, fill=ACCENT, anchor='ls')
 cd.text((X + cd.textlength('33', font=f33) + 34, 424), 'POREČ',
         font=B(44), fill=CREAM, anchor='ls')
 cd.text((X, 505), 'Walk-in barbershop, bez naručivanja',

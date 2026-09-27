@@ -91,10 +91,15 @@
 /* =========================================================
    TOKENS
 
-   The green is the shop's own wall, sampled off the photographs
-   rather than picked from a palette, and it is the green the logo
-   is drawn in. It is the one colour a customer already recognises
-   from standing in the room.
+   Green throughout, because it is the shop's own: the wall sampled
+   off the photographs rather than picked from a palette, and the
+   colour the logo is drawn in. It is the one colour a customer
+   already recognises from standing in the room.
+
+   --green is the deep wall, for whole bands. --acc is the lit wall,
+   and it is the accent: 8.3:1 on the page, which is where the gold
+   it replaced sat, so nothing changed weight when the colour did.
+   --acc-2 is brighter, for the accents that land on --green itself.
 
    There is no red here. The barber red fails contrast at text sizes
    on this background, and the one thing it was doing, a short rule in
@@ -104,7 +109,7 @@
   --ink:#0A0B0C; --ink-2:#101214; --ink-3:#171A1D;
   --green:#12302A; --green-2:#5B9A8B;
   --cream:#F6F2EA; --cream-2:#CFC8BD; --muted:#978F85;
-  --brass:#C8A046; --brass-2:#E2BE6B;
+  --acc:#6FB5A2; --acc-2:#8FC9B9;
   --line:rgba(246,242,234,.11); --line-2:rgba(246,242,234,.06);
   --ok:#5BBE7E;
 
@@ -142,7 +147,7 @@ h1{font-size:clamp(38px,8.6vw,88px);font-weight:700;line-height:.92;letter-spaci
 h2{font-size:clamp(27px,4.8vw,50px);line-height:.98;letter-spacing:-.012em;}
 h3{font-size:19px;line-height:1.2;letter-spacing:.005em;}
 
-:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px;}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:2px;}
 
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px;}
 section{padding:clamp(60px,9vw,120px) 0;}
@@ -153,7 +158,7 @@ section{padding:clamp(60px,9vw,120px) 0;}
 .eyebrow{
   display:inline-block;
   font:600 11.5px/1 var(--body);letter-spacing:.19em;text-transform:uppercase;
-  color:var(--brass);
+  color:var(--acc);
 }
 .sec-head{max-width:660px;margin-bottom:clamp(30px,4.6vw,52px);position:relative;}
 .sec-head h2{margin:15px 0 15px;}
@@ -196,11 +201,11 @@ section{padding:clamp(60px,9vw,120px) 0;}
 /* Press feedback is instant and lives on the press, not on release. */
 .btn:active{transform:scale(.97);}
 
-.btn-1{background:var(--brass);color:#14100A;}
-.btn-1 .btn-fill{background:var(--cream);color:#14100A;}
+.btn-1{background:var(--acc);color:#07201B;}
+.btn-1 .btn-fill{background:var(--cream);color:#07201B;}
 .btn-2{background:rgba(10,11,12,.4);color:var(--cream);border-color:rgba(246,242,234,.28);
   backdrop-filter:blur(4px);}
-.btn-2 .btn-fill{background:var(--cream);color:#14100A;}
+.btn-2 .btn-fill{background:var(--cream);color:#07201B;}
 
 @media (hover:hover) and (pointer:fine){
   .btn:hover .btn-fill{clip-path:inset(0 0 0 0);}
@@ -237,14 +242,14 @@ section{padding:clamp(60px,9vw,120px) 0;}
 }
 .boot-mark span{display:block;transform:translateY(110%);
   animation:bootUp 620ms var(--out) forwards;}
-.boot-mark .n{color:var(--brass);animation-delay:90ms;}
+.boot-mark .n{color:var(--acc);animation-delay:90ms;}
 @keyframes bootUp{ to{transform:translateY(0);} }
 .boot-bar{
   width:min(210px,42vw);height:2px;margin-top:26px;
   background:rgba(246,242,234,.13);overflow:hidden;
 }
 .boot-bar i{
-  display:block;height:100%;background:var(--brass);
+  display:block;height:100%;background:var(--acc);
   transform:scaleX(0);transform-origin:left;
   animation:bootBar 1400ms linear forwards;
 }
@@ -266,7 +271,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 /* Reading progress. scaleX only, so it never costs a layout. */
 .progress{
   position:absolute;left:0;right:0;bottom:-1px;height:2px;
-  background:var(--brass);transform:scaleX(0);transform-origin:left;
+  background:var(--acc);transform:scaleX(0);transform-origin:left;
   will-change:transform;
 }
 .hd{display:flex;align-items:center;gap:14px;height:66px;}
@@ -276,9 +281,9 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .mark{display:block;width:auto;height:34px;aspect-ratio:734/1408;
   color:var(--cream);flex:none;}
 .lockup .mark{transition:color 240ms ease;}
-@media (hover:hover) and (pointer:fine){ .lockup:hover .mark{color:var(--brass);} }
+@media (hover:hover) and (pointer:fine){ .lockup:hover .mark{color:var(--acc);} }
 .lockup b{font:700 19px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;}
-.lockup b i{font-style:normal;color:var(--brass);}
+.lockup b i{font-style:normal;color:var(--acc);}
 .hd nav{display:flex;gap:26px;}
 .hd nav a{
   position:relative;font:500 12.5px/1 var(--body);letter-spacing:.14em;
@@ -288,7 +293,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    appearing whole. */
 .hd nav a::after{
   content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
-  background:var(--brass);transform:scaleX(0);transform-origin:right;
+  background:var(--acc);transform:scaleX(0);transform-origin:right;
   transition:transform 260ms var(--out);
 }
 @media (hover:hover) and (pointer:fine){
@@ -307,7 +312,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 }
 .lang:active{transform:scale(.96);}
 @media (hover:hover) and (pointer:fine){
-  .lang:hover{border-color:var(--brass);color:var(--brass);}
+  .lang:hover{border-color:var(--acc);color:var(--acc);}
 }
 
 /* =========================================================
@@ -342,7 +347,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .line > span{display:block;transform:translateY(105%);}
 .ready .line > span{transform:translateY(0);
   transition:transform 780ms var(--out) var(--d,0ms);}
-.hero h1 em{font-style:normal;color:var(--brass);}
+.hero h1 em{font-style:normal;color:var(--acc);}
 .hero .lede{margin-top:22px;max-width:31em;}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px;}
 
@@ -360,7 +365,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 }
 .status .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;}
 .status.open .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(91,190,126,.15);}
-.status.soon .dot{background:var(--brass);box-shadow:0 0 0 4px rgba(200,160,70,.15);}
+.status.soon .dot{background:var(--acc);box-shadow:0 0 0 4px rgba(111,181,162,.15);}
 .status b{color:var(--cream);font-weight:600;}
 
 /* =========================================================
@@ -369,20 +374,20 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    ========================================================= */
 .ticker{
   position:relative;
-  background:var(--brass);color:#14100A;overflow:hidden;
+  background:var(--acc);color:#07201B;overflow:hidden;
   padding:13px 0;border-block:1px solid rgba(0,0,0,.18);
 }
 /* The words used to be sliced mid-letter at both ends of the screen. These
-   two are the brass itself, laid over the text, so the line fades out into
-   the band instead of hitting a cut edge. The band stays solid full width;
-   masking the whole strip would have tapered the brass away with it.
+   two are the band's own green, laid over the text, so the line fades out
+   into it instead of hitting a cut edge. The band stays solid full width;
+   masking the whole strip would have tapered the green away with it.
    rgba rather than `transparent` so nothing interpolates through grey. */
 .ticker::before,.ticker::after{
   content:'';position:absolute;top:0;bottom:0;z-index:1;pointer-events:none;
   width:clamp(36px,9vw,130px);
 }
-.ticker::before{left:0; background:linear-gradient(90deg,var(--brass),rgba(200,160,70,0));}
-.ticker::after {right:0;background:linear-gradient(270deg,var(--brass),rgba(200,160,70,0));}
+.ticker::before{left:0; background:linear-gradient(90deg,var(--acc),rgba(111,181,162,0));}
+.ticker::after {right:0;background:linear-gradient(270deg,var(--acc),rgba(111,181,162,0));}
 .ticker-track{display:flex;width:max-content;animation:slide 34s linear infinite;}
 .ticker-track span{
   font:600 13px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;
@@ -403,7 +408,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .step .n{
   position:absolute;top:-.62em;right:0;
   font:700 clamp(40px,5vw,62px)/1 var(--display);letter-spacing:-.04em;
-  color:transparent;-webkit-text-stroke:1px rgba(200,160,70,.34);
+  color:transparent;-webkit-text-stroke:1px rgba(111,181,162,.34);
 }
 .step h3{margin-bottom:10px;}
 .step p{color:var(--muted);font-size:15px;}
@@ -417,7 +422,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .ic{
   width:40px;height:40px;border-radius:4px;margin-bottom:18px;
   display:grid;place-items:center;
-  background:rgba(200,160,70,.12);color:var(--brass);
+  background:rgba(111,181,162,.12);color:var(--acc);
 }
 .ic svg{width:20px;height:20px;}
 
@@ -425,8 +430,8 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .onwall{background:var(--green);border-block:1px solid rgba(0,0,0,.35);}
 .onwall .card{background:rgba(0,0,0,.2);border-color:rgba(246,242,234,.08);}
 .onwall .card p{color:rgba(246,242,234,.7);}
-.onwall .ic{background:rgba(226,190,107,.14);}
-.onwall .eyebrow{color:var(--brass-2);}
+.onwall .ic{background:rgba(143,201,185,.14);}
+.onwall .eyebrow{color:var(--acc-2);}
 
 /* =========================================================
    PRICE LIST
@@ -439,7 +444,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 /* A hairline that draws itself under the row being read. */
 .row::after{
   content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
-  background:var(--brass);transform:scaleX(0);transform-origin:left;
+  background:var(--acc);transform:scaleX(0);transform-origin:left;
   transition:transform 380ms var(--out);
 }
 .row .nm{font-weight:500;font-size:17px;}
@@ -449,7 +454,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 }
 .row .dots{flex:1;border-bottom:1px dotted rgba(246,242,234,.2);min-width:14px;
   transform:translateY(-4px);}
-.row .amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--brass);flex:none;
+.row .amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--acc);flex:none;
   transition:transform 380ms var(--out);}
 @media (hover:hover) and (pointer:fine){
   .row:hover::after{transform:scaleX(1);}
@@ -504,7 +509,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .hours tr.today td:first-child{position:relative;padding-left:17px;}
 .hours tr.today td:first-child::before{
   content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
-  width:6px;height:6px;border-radius:50%;background:var(--brass);
+  width:6px;height:6px;border-radius:50%;background:var(--acc);
 }
 .hours td.shut{color:var(--muted);}
 
@@ -516,7 +521,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   .btns{flex-direction:column;align-items:stretch;}
   .btns .btn-face{width:100%;}
 }
-.fill{color:var(--brass);border-bottom:1px dashed var(--brass);opacity:.88;font-style:normal;}
+.fill{color:var(--acc);border-bottom:1px dashed var(--acc);opacity:.88;font-style:normal;}
 .fill::after{content:' ?';font-size:.8em;vertical-align:super;}
 
 .crow{
@@ -529,7 +534,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .crow .lbl{display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--muted);font-weight:600;margin-bottom:3px;}
 .crow b{display:block;font-weight:500;font-size:16.5px;transition:color 200ms ease;}
-@media (hover:hover) and (pointer:fine){ .crow:hover b{color:var(--brass);} }
+@media (hover:hover) and (pointer:fine){ .crow:hover b{color:var(--acc);} }
 
 footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 .ft{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;
