@@ -94,14 +94,15 @@
    is drawn in. It is the one colour a customer already recognises
    from standing in the room.
 
-   The barber red fails contrast at text sizes on this background,
-   so it is only ever a rule, a stripe or a dot, never a word.
+   There is no red here. The barber red fails contrast at text sizes
+   on this background, and the one thing it was doing, a short rule in
+   front of every section label, was noise at every section.
    ========================================================= */
 :root{
   --ink:#0A0B0C; --ink-2:#101214; --ink-3:#171A1D;
   --green:#12302A; --green-2:#5B9A8B;
   --cream:#F6F2EA; --cream-2:#CFC8BD; --muted:#978F85;
-  --brass:#C8A046; --brass-2:#E2BE6B; --red:#C0392E;
+  --brass:#C8A046; --brass-2:#E2BE6B;
   --line:rgba(246,242,234,.11); --line-2:rgba(246,242,234,.06);
   --ok:#5BBE7E;
 
@@ -148,11 +149,10 @@ section{padding:clamp(60px,9vw,120px) 0;}
 
 /* ---------- section heads ---------- */
 .eyebrow{
-  display:inline-flex;align-items:center;gap:10px;
+  display:inline-block;
   font:600 11.5px/1 var(--body);letter-spacing:.19em;text-transform:uppercase;
   color:var(--brass);
 }
-.eyebrow::before{content:'';width:26px;height:2px;background:var(--red);flex:none;}
 .sec-head{max-width:660px;margin-bottom:clamp(30px,4.6vw,52px);position:relative;}
 .sec-head h2{margin:15px 0 15px;}
 /* An oversized index numeral, the way a printed price list numbers its
