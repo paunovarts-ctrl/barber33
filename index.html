@@ -177,7 +177,11 @@ h3{font-size:19px;line-height:1.2;letter-spacing:.005em;}
   padding-inline:var(--gut);
   border-inline:1px solid var(--rule);
 }
-section{padding-block:clamp(56px,8vw,104px);border-top:1px solid var(--rule);}
+section{padding-block:0;border-top:1px solid var(--rule);}
+/* The padding lives on the wrap, not the section. On the section it fell
+   outside the wrap's border box and left the vertical rules ~200px short
+   of each other at every boundary. */
+section > .wrap{padding-block:clamp(56px,8vw,104px);}
 .hero{border-top:0;}
 
 /* A ruled row: divided rather than gapped, and spanning the full width
@@ -362,10 +366,8 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    ========================================================= */
 .hero{
   position:relative;overflow:hidden;
-  display:flex;align-items:flex-end;
+  display:flex;align-items:stretch;
   min-height:min(88vh,860px);
-  padding-top:clamp(56px,10vw,120px);
-  padding-bottom:clamp(44px,6vw,84px);
 }
 .hero-bg{position:absolute;inset:-6% 0;}
 .hero-bg img{
@@ -382,7 +384,11 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
                             rgba(8,9,10,.44) 64%, rgba(8,9,10,.32) 100%),
     linear-gradient(to top, #0A0B0C 0%, rgba(10,11,12,.2) 34%, rgba(10,11,12,0) 62%);
 }
-.hero-inner{position:relative;z-index:1;width:100%;}
+.hero-inner{
+  position:relative;z-index:1;width:100%;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-block:clamp(56px,10vw,120px) clamp(44px,6vw,84px);
+}
 .hero h1{margin:18px 0 0;}
 /* Each line rides up out of its own clipped box. */
 .line{display:block;overflow:hidden;padding-bottom:.04em;}
@@ -416,28 +422,25 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    ========================================================= */
 .ticker{
   --rule:rgba(7,32,27,.26);
-  position:relative;
-  background:var(--acc);color:#07201B;overflow:hidden;
-  padding:13px 0;border-block:1px solid rgba(0,0,0,.18);
+  background:var(--acc);color:#07201B;
+  border-block:1px solid rgba(0,0,0,.18);
 }
+/* The band is full bleed, but its words are not: they run inside the same
+   two rules as everything else and are clipped by them, so the strip sits
+   in the grid instead of sliding straight through it. No gutter, because
+   a line of type moving past a rule should meet it, not stop short. */
+.tickwrap{position:relative;overflow:hidden;padding-block:13px;padding-inline:0;}
 /* The words used to be sliced mid-letter at both ends of the screen. These
    two are the band's own green, laid over the text, so the line fades out
    into it instead of hitting a cut edge. The band stays solid full width;
    masking the whole strip would have tapered the green away with it.
    rgba rather than `transparent` so nothing interpolates through grey. */
-.ticker::before,.ticker::after{
+.tickwrap::before,.tickwrap::after{
   content:'';position:absolute;top:0;bottom:0;z-index:1;pointer-events:none;
-  width:clamp(36px,9vw,130px);
+  width:clamp(30px,6vw,90px);
 }
-/* The band is full bleed, so it has no .wrap to carry the container's
-   rules. This is that pair, laid over it, so the two lines cross the
-   strip instead of stopping at it. */
-.tickrules{
-  position:absolute;inset:0;margin-inline:auto;max-width:var(--wrap);
-  border-inline:1px solid var(--rule);pointer-events:none;z-index:2;
-}
-.ticker::before{left:0; background:linear-gradient(90deg,var(--acc),rgba(111,181,162,0));}
-.ticker::after {right:0;background:linear-gradient(270deg,var(--acc),rgba(111,181,162,0));}
+.tickwrap::before{left:0; background:linear-gradient(90deg,var(--acc),rgba(111,181,162,0));}
+.tickwrap::after {right:0;background:linear-gradient(270deg,var(--acc),rgba(111,181,162,0));}
 .ticker-track{display:flex;width:max-content;animation:slide 34s linear infinite;}
 .ticker-track span{
   font:600 13px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;
@@ -581,8 +584,9 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .crow b{display:block;font-weight:500;font-size:16.5px;transition:color 200ms ease;}
 @media (hover:hover) and (pointer:fine){ .crow:hover b{color:var(--acc);} }
 
-footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
+footer{border-top:1px solid var(--rule);}
 .ft{display:flex;flex-wrap:wrap;gap:12px 26px;align-items:center;
+  padding-block:32px 44px;
   font-size:13.5px;color:var(--muted);}
 .ft .sp{margin-left:auto;}
 
@@ -621,7 +625,6 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 @media (max-width:760px){
   :root{--gut:18px;}
   .wrap{border-inline:0;}
-  .tickrules{display:none;}
   .tiles{grid-template-columns:1fr 1fr;}
   .tile:nth-child(2n+1){border-left:0;}
   .tile:nth-child(n+3){border-top:1px solid var(--rule);}
@@ -773,8 +776,9 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 </section>
 
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-track" id="tick"></div>
-  <span class="tickrules"></span>
+  <div class="wrap tickwrap">
+    <div class="ticker-track" id="tick"></div>
+  </div>
 </div>
 
 <!-- ===================== HOW IT WORKS ===================== -->
