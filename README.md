@@ -23,7 +23,18 @@ The phone, the address and the opening hours are in. What is left:
    plausible-guess ones.
 4. **The eight menu photographs**, `assets/menu-<slug>.jpg`. Until a file is
    there the cell shows the shop's mark ghosted, which is a finished state,
-   not a broken one.
+   not a broken one. `tools/fetch-menu-photos.py` does the whole job:
+
+   ```bash
+   pip install Pillow && python3 tools/fetch-menu-photos.py
+   ```
+
+   It downloads each one, trims any white print border, crops to 3:2 at
+   1200x800, writes the file and switches the card on. It will not touch
+   `index.html` unless all eight are in hand, so a half-finished run leaves
+   nothing half-wired. If the URLs are unreachable or expired, drop the
+   pictures into `tools/.menu-cache/` named `<slug>.png` and run it again:
+   it prefers a local file over a download.
 5. **The quiet-times note** beside the hours, and *Hrvatski i engleski* in
    the Što radimo cards. Both are claims about the shop that the shop has
    not confirmed.
