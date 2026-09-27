@@ -60,6 +60,30 @@ artwork had no alpha channel: its "transparency" was a checkerboard baked
 into the pixels, so the mark was keyed out by luminance, which the
 histogram made unambiguous.
 
+## The rule grid
+
+The page is held together by hairlines rather than by boxes, the way Wine
+Corner is. Two rules run its full height at the container's edges, carried by
+the header, the hero, every section, the ticker and the footer, so they are
+one unbroken pair rather than a motif repeated per block. A third crosses the
+top of each section, and a fourth sits under each section heading. What used
+to be cards are now cells of that grid: no fill, no border, no corner radius,
+just the rules between them.
+
+Two things make it hold:
+
+- **`--gut`** is the single gutter. The container's rules sit at its outer
+  edge and every ruled row pulls back out by exactly that much, so a divider
+  always lands *on* a container rule instead of near it. Change the one value
+  and the grid stays square.
+- **`--rule` is redefined per field.** The same hairline cannot serve a
+  near-black section, the green band and the bright ticker, so each sets its
+  own and everything inside inherits it.
+
+Below the phone breakpoint the side rules go entirely and the dividers turn
+from vertical to horizontal. Drawn hard against a phone's screen edge they
+read as a border around the page rather than as a grid holding it together.
+
 ## How it behaves
 
 - **Croatian is the page**, English lives in `data-en` attributes beside it.

@@ -122,11 +122,22 @@
   --display:"Oswald",'Arial Narrow',system-ui,sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --wrap:1120px;
+  /* One gutter for the whole page. The container's side rules sit at its
+     outer edge, and every ruled row pulls back out by exactly this much, so
+     a divider always lands on a container rule rather than near it. Change
+     it here and the grid stays square. */
+  --gut:clamp(20px,4.2vw,52px);
+  --rule:rgba(246,242,234,.11);
   --bar:0px;                     /* set by JS to the phone call bar's height */
 }
 
 *{box-sizing:border-box;}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+html{
+  -webkit-text-size-adjust:100%;scroll-behavior:smooth;
+  /* The header is sticky, so an anchor jump would otherwise land a
+     section's top edge underneath it and hide the label. */
+  scroll-padding-top:calc(66px + env(safe-area-inset-top) + 8px);
+}
 body{
   margin:0;background:var(--ink);color:var(--cream);
   font:400 16px/1.65 var(--body);
@@ -149,8 +160,34 @@ h3{font-size:19px;line-height:1.2;letter-spacing:.005em;}
 
 :focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:2px;}
 
-.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px;}
-section{padding:clamp(60px,9vw,120px) 0;}
+/* =========================================================
+   THE RULE GRID
+
+   Two hairlines run the height of the page at the container's edges,
+   carried by the header, the hero, every section and the footer, so
+   they are one unbroken pair rather than a motif repeated per block.
+   A third crosses the top of each section. Everything between reads as
+   a cell of one grid instead of a card floating on a background.
+
+   --rule is redefined per field, because the same hairline cannot
+   serve a near-black section and a green one.
+   ========================================================= */
+.wrap{
+  max-width:var(--wrap);margin:0 auto;
+  padding-inline:var(--gut);
+  border-inline:1px solid var(--rule);
+}
+section{padding-block:clamp(56px,8vw,104px);border-top:1px solid var(--rule);}
+.hero{border-top:0;}
+
+/* A ruled row: divided rather than gapped, and spanning the full width
+   between the container's rules. */
+.grid,.two{display:grid;gap:0;margin-inline:calc(var(--gut) * -1);}
+.grid > *,.two > *{
+  min-width:0;padding:clamp(26px,3vw,34px) var(--gut);
+  border-left:1px solid var(--rule);
+}
+.grid > :first-child,.two > :first-child{border-left:0;}
 .lede{color:var(--cream-2);font-size:clamp(16px,1.7vw,18.5px);line-height:1.62;}
 .muted{color:var(--muted);font-size:14.5px;line-height:1.6;}
 
@@ -160,8 +197,13 @@ section{padding:clamp(60px,9vw,120px) 0;}
   font:600 11.5px/1 var(--body);letter-spacing:.19em;text-transform:uppercase;
   color:var(--acc);
 }
-.sec-head{max-width:660px;margin-bottom:clamp(30px,4.6vw,52px);position:relative;}
-.sec-head h2{margin:15px 0 15px;}
+.sec-head{margin-bottom:clamp(28px,4vw,46px);position:relative;}
+.sec-head h2{
+  margin:14px 0 0;padding:0 var(--gut) 22px;
+  margin-inline:calc(var(--gut) * -1);
+  border-bottom:1px solid var(--rule);
+}
+.sec-head .lede{margin-top:22px;max-width:62ch;}
 /* An oversized index numeral, the way a printed price list numbers its
    sections. Decorative, so it is hidden from a reader. */
 .idx{
@@ -373,6 +415,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    loops; this is the one thing allowed to just run.
    ========================================================= */
 .ticker{
+  --rule:rgba(7,32,27,.26);
   position:relative;
   background:var(--acc);color:#07201B;overflow:hidden;
   padding:13px 0;border-block:1px solid rgba(0,0,0,.18);
@@ -386,6 +429,13 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
   content:'';position:absolute;top:0;bottom:0;z-index:1;pointer-events:none;
   width:clamp(36px,9vw,130px);
 }
+/* The band is full bleed, so it has no .wrap to carry the container's
+   rules. This is that pair, laid over it, so the two lines cross the
+   strip instead of stopping at it. */
+.tickrules{
+  position:absolute;inset:0;margin-inline:auto;max-width:var(--wrap);
+  border-inline:1px solid var(--rule);pointer-events:none;z-index:2;
+}
 .ticker::before{left:0; background:linear-gradient(90deg,var(--acc),rgba(111,181,162,0));}
 .ticker::after {right:0;background:linear-gradient(270deg,var(--acc),rgba(111,181,162,0));}
 .ticker-track{display:flex;width:max-content;animation:slide 34s linear infinite;}
@@ -398,25 +448,21 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 /* =========================================================
    STEPS AND CARDS
    ========================================================= */
-.grid{display:grid;gap:16px;}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr));}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr));}
-@media (max-width:900px){ .g4{grid-template-columns:1fr 1fr;} }
-@media (max-width:660px){ .g3,.g4{grid-template-columns:1fr;} }
 
-.step{position:relative;padding-top:22px;border-top:1px solid var(--line);}
+.step{position:relative;}
 .step .n{
-  position:absolute;top:-.62em;right:0;
+  position:absolute;top:-.36em;right:var(--gut);
   font:700 clamp(40px,5vw,62px)/1 var(--display);letter-spacing:-.04em;
   color:transparent;-webkit-text-stroke:1px rgba(111,181,162,.34);
 }
 .step h3{margin-bottom:10px;}
 .step p{color:var(--muted);font-size:15px;}
 
-.card{
-  background:var(--ink-2);border:1px solid var(--line-2);border-radius:4px;
-  padding:26px 24px;
-}
+/* A cell, not a card. The rule grid draws the edges now, so the box,
+   its fill and its corner radius were three ways of saying the same
+   thing a fourth time. */
 .card h3{margin-bottom:10px;}
 .card p{color:var(--muted);font-size:15px;}
 .ic{
@@ -427,8 +473,10 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 .ic svg{width:20px;height:20px;}
 
 /* the green band is the shop's own wall */
-.onwall{background:var(--green);border-block:1px solid rgba(0,0,0,.35);}
-.onwall .card{background:rgba(0,0,0,.2);border-color:rgba(246,242,234,.08);}
+/* The green band needs a stronger hairline than the near-black fields
+   to read at the same weight. */
+.field2{background:var(--ink-2);}
+.onwall{--rule:rgba(246,242,234,.17);background:var(--green);}
 .onwall .card p{color:rgba(246,242,234,.7);}
 .onwall .ic{background:rgba(143,201,185,.14);}
 .onwall .eyebrow{color:var(--acc-2);}
@@ -436,10 +484,10 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 /* =========================================================
    PRICE LIST
    ========================================================= */
-.prices{border-top:1px solid var(--line);}
+.prices{margin-inline:calc(var(--gut) * -1);border-top:1px solid var(--rule);}
 .row{
   position:relative;display:flex;align-items:baseline;gap:12px;
-  padding:18px 2px;border-bottom:1px solid var(--line-2);
+  padding:18px var(--gut);border-bottom:1px solid var(--rule);
 }
 /* A hairline that draws itself under the row being read. */
 .row::after{
@@ -471,13 +519,15 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
    the photograph inside settles back from a slight push, so the
    picture arrives rather than switching on.
    ========================================================= */
-.tiles{display:grid;gap:12px;grid-template-columns:repeat(4,1fr);}
-@media (max-width:760px){ .tiles{grid-template-columns:1fr 1fr;} }
+.tiles{display:grid;gap:0;grid-template-columns:repeat(4,1fr);
+  margin-inline:calc(var(--gut) * -1);}
 .tile{
-  position:relative;overflow:hidden;border-radius:4px;aspect-ratio:3/4;
+  position:relative;overflow:hidden;aspect-ratio:3/4;
   background:var(--ink-2);margin:0;
+  border-left:1px solid var(--rule);
   clip-path:inset(0 0 100% 0);
 }
+.tile:first-child{border-left:0;}
 .tile.in{clip-path:inset(0 0 0 0);transition:clip-path 880ms var(--in-out) var(--d,0ms);}
 .tile img{
   width:100%;height:100%;object-fit:cover;
@@ -492,12 +542,7 @@ header.stuck{background:rgba(10,11,12,.9);border-bottom-color:var(--line-2);}
 /* =========================================================
    HOURS, FIND US
    ========================================================= */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-/* A 1fr track is floored at its content's min-content width, and the button
-   labels below are nowrap. Without this the cards refused to go narrower
-   than their widest button and pushed a 320px screen sideways. */
-.two > *,.grid > *{min-width:0;}
-@media (max-width:800px){ .two{grid-template-columns:1fr;} }
+.two{grid-template-columns:1fr 1fr;}
 .hours{width:100%;border-collapse:collapse;}
 .hours th{
   text-align:left;font:600 11.5px/1 var(--body);letter-spacing:.16em;
@@ -551,6 +596,44 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 .callbar .btn{flex:1;}
 .callbar .btn-face{width:100%;padding:15px 8px;}
 @media (max-width:800px){ .callbar{display:flex;} }
+
+/* =========================================================
+   THE RULE GRID, NARROWER
+
+   As each row drops to a single column its dividers turn from vertical
+   to horizontal, so the cells stay connected rather than merely
+   stacked. Below the phone breakpoint the container's side rules go
+   entirely: a phone has no gutter to draw them in, and drawn hard
+   against the screen edge they read as a border around the page
+   rather than as a grid holding it together.
+   ========================================================= */
+@media (max-width:900px) and (min-width:661px){
+  .g4{grid-template-columns:1fr 1fr;}
+  .g4 > *{border-top:1px solid var(--rule);}
+  .g4 > :nth-child(-n+2){border-top:0;}
+  .g4 > :nth-child(2n+1){border-left:0;}
+}
+@media (max-width:800px){
+  .two{grid-template-columns:1fr;margin-inline:0;}
+  .two > *{padding-inline:0;border-left:0;border-top:1px solid var(--rule);}
+  .two > :first-child{border-top:0;padding-top:0;}
+}
+@media (max-width:760px){
+  :root{--gut:18px;}
+  .wrap{border-inline:0;}
+  .tickrules{display:none;}
+  .tiles{grid-template-columns:1fr 1fr;}
+  .tile:nth-child(2n+1){border-left:0;}
+  .tile:nth-child(n+3){border-top:1px solid var(--rule);}
+}
+@media (max-width:660px){
+  .g3,.g4{grid-template-columns:1fr;}
+  .grid{margin-inline:0;}
+  .grid > *{padding-inline:0;border-left:0;border-top:1px solid var(--rule);}
+  .grid > :first-child{border-top:0;padding-top:0;}
+  .prices{margin-inline:0;}
+  .row{padding-inline:0;}
+}
 
 /* ---------- scroll reveals ---------- */
 [data-reveal]{opacity:0;transform:translateY(18px);}
@@ -691,6 +774,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track" id="tick"></div>
+  <span class="tickrules"></span>
 </div>
 
 <!-- ===================== HOW IT WORKS ===================== -->
@@ -734,7 +818,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 </section>
 
 <!-- ===================== PRICES ===================== -->
-<section id="cjenik" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
+<section id="cjenik" class="field2">
   <div class="wrap">
     <div class="sec-head" data-reveal>
       <span class="idx">02</span>
@@ -866,7 +950,7 @@ footer{border-top:1px solid var(--line-2);padding:32px 0 44px;}
 <!-- FILL: the hours below are the single source of truth. The badge at the
      top of the page is computed from these data- attributes, so anything
      wrong here is wrong twice. -->
-<section id="vrijeme" style="background:var(--ink-2);border-block:1px solid var(--line-2)">
+<section id="vrijeme" class="field2">
   <div class="wrap">
     <div class="sec-head" data-reveal>
       <span class="idx">05</span>
