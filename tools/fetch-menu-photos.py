@@ -92,13 +92,13 @@ def main():
                               quality=82, optimize=True, progressive=True)
         print("  wrote assets/menu-%s.jpg" % slug)
 
-    if missing:
-        sys.exit("\ncould not fetch: %s\n"
-                 "Is cdn.openart.ai reachable? Otherwise drop the files into\n"
-                 "%s as <slug>.png and run this again." % (", ".join(missing), CACHE))
+    # Wire whatever arrived. A cell without a photograph shows the shop's mark,
+    # which is a designed state rather than a gap, so five cards done and three
+    # waiting is a page you can ship, not a half-finished edit.
+    done = [s for s in URLS if (OUT/("menu-%s.jpg" % s)).exists()]
 
     html = ROOT/"index.html"; s = html.read_text(encoding="utf-8"); n = 0
-    for slug in URLS:
+    for slug in done:
         # (?!-->) at every step keeps the match inside ONE comment. A plain
         # lazy .*? under DOTALL spans from the first card's comment to this
         # card's <img> and deletes every card in between.
@@ -107,7 +107,12 @@ def main():
                          r'\s*-->' % re.escape(slug))
         s, k = pat.subn(lambda m: m.group(1), s); n += k
     html.write_text(s, encoding="utf-8", newline="\n")
-    print("\nswitched on %d of %d cards (already-live cards count 0)" % (n, len(URLS)))
+    print("\nswitched on %d card(s); %d of %d now have a photograph"
+          % (n, len(done), len(URLS)))
+    if missing:
+        print("\nstill waiting on: %s\n"
+              "Drop the files into %s as <slug>.png and run this again."
+              % (", ".join(missing), CACHE))
 
 
 if __name__ == "__main__":
