@@ -22,8 +22,13 @@ The phone, the address and the opening hours are in. What is left:
    the field in `SHOP` takes all three back off the page.
 2. **Sunday.** The hours came from a listing that was cut off after
    Saturday, so Sunday is set closed on an assumption and nothing else.
-3. **The prices and durations** in the Cjenik section, which are still the
-   plausible-guess ones.
+3. **The durations** in the Usluge section, which are still the
+   plausible-guess ones. The prices that used to sit beside them are gone on
+   purpose: they were guesses too, and a wrong number on a price list costs
+   more than no list does, since someone reads it, walks over and is quoted
+   something else. The lede sends people to the shop or the phone instead. If
+   the shop confirms a list, the amounts go back in `.svc-meta` beside the
+   minutes, and `priceRange` goes back into the JSON-LD with them.
 4. **The eight menu photographs are in.** They are generated, not taken in
    this shop, and match its room rather than being of it: the same
    sage-green walls, oak floor and warm lamp. Real photographs of the real

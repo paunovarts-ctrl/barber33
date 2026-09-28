@@ -69,7 +69,6 @@
   "name": "Barber 33",
   "description": "Walk-in barbershop u Poreču. Bez naručivanja, po redu dolaska.",
   "image": "assets/share-card.jpg",
-  "priceRange": "€€",
   "currenciesAccepted": "EUR",
   "paymentAccepted": "Cash, Credit Card",
   "address": {
@@ -665,7 +664,6 @@ header.stuck::after{opacity:1;}
   justify-content:space-between;gap:10px;
 }
 .svc-mins{font:500 11px/1 var(--body);color:var(--muted);letter-spacing:.06em;flex:none;}
-.svc-amt{font:600 19px/1 var(--display);letter-spacing:.03em;color:var(--acc);flex:none;}
 
 /* The hairline that used to draw itself under the price row being read. */
 .svc::after{
@@ -873,7 +871,7 @@ footer{border-top:1px solid var(--rule);}
     </a>
     <nav>
       <a href="#kako" data-en="How it works">Kako to ide</a>
-      <a href="#cjenik" data-en="Prices">Cjenik</a>
+      <a href="#cjenik" data-en="Services">Usluge</a>
       <a href="#vrijeme" data-en="Hours">Radno vrijeme</a>
       <a href="#gdje" data-en="Find us">Gdje smo</a>
     </nav>
@@ -1020,17 +1018,19 @@ footer{border-top:1px solid var(--rule);}
   <div class="wrap">
     <div class="sec-head" data-reveal>
       <span class="idx">02</span>
-      <span class="eyebrow" data-en="Prices">Cjenik</span>
-      <h2 data-en="The price is the price.">Cijena je cijena.</h2>
-      <p class="lede" data-en="No surcharge for a fade, a wash or styling, and the beard line and neck are part of a cut rather than an extra.">
-        Bez doplate za fade, pranje ili stiliziranje, a linija brade i vrat idu uz šišanje,
-        a ne posebno.
+      <span class="eyebrow" data-en="Services">Usluge</span>
+      <h2 data-en="Come in for this.">Uđi po ovo.</h2>
+      <p class="lede" data-en="A fade, a wash and styling come with a cut, and so do the beard line and the neck. For prices, ask in the shop or give us a ring.">
+        Fade, pranje i stiliziranje idu uz šišanje, kao i linija brade i vrat.
+        Za cijene pitaj u salonu ili nazovi.
       </p>
     </div>
 
-    <!-- FILL: prices and durations for the shop to confirm.
-         PHOTOS: one per cell, assets/menu-<slug>.jpg, landscape 3:2 at 900x600.
-         Until a file is in, the cell shows the shop's mark ghosted. -->
+    <!-- FILL: the durations are still the shop's to confirm. Prices are
+         deliberately absent: they were guesses, and a wrong number on a price
+         list is worse than no list. The lede sends people to the shop or the
+         phone instead.
+         PHOTOS: one per cell, assets/menu-<slug>.jpg, landscape 3:2. -->
     <div class="menu">
       <article class="svc" data-reveal style="--d:0ms">
         <div class="svc-shot">
@@ -1042,7 +1042,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Haircut">Šišanje</h3>
           <div class="svc-meta">
             <span class="svc-mins">30 min</span>
-            <span class="svc-amt">15 €</span>
           </div>
         </div>
       </article>
@@ -1056,7 +1055,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Cut, wash &amp; style">Šišanje, pranje i styling</h3>
           <div class="svc-meta">
             <span class="svc-mins">40 min</span>
-            <span class="svc-amt">18 €</span>
           </div>
         </div>
       </article>
@@ -1070,7 +1068,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Skin fade">Fade</h3>
           <div class="svc-meta">
             <span class="svc-mins">40 min</span>
-            <span class="svc-amt">18 €</span>
           </div>
         </div>
       </article>
@@ -1084,7 +1081,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Haircut + beard">Šišanje i brada</h3>
           <div class="svc-meta">
             <span class="svc-mins">50 min</span>
-            <span class="svc-amt">22 €</span>
           </div>
         </div>
       </article>
@@ -1098,7 +1094,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Beard trim &amp; shape">Oblikovanje brade</h3>
           <div class="svc-meta">
             <span class="svc-mins">20 min</span>
-            <span class="svc-amt">10 €</span>
           </div>
         </div>
       </article>
@@ -1112,7 +1107,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Hot-towel razor shave">Klasično brijanje britvom</h3>
           <div class="svc-meta">
             <span class="svc-mins">30 min</span>
-            <span class="svc-amt">15 €</span>
           </div>
         </div>
       </article>
@@ -1126,7 +1120,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Head shave">Brijanje glave</h3>
           <div class="svc-meta">
             <span class="svc-mins">25 min</span>
-            <span class="svc-amt">13 €</span>
           </div>
         </div>
       </article>
@@ -1140,7 +1133,6 @@ footer{border-top:1px solid var(--rule);}
           <h3 class="svc-nm" data-en="Kids' cut (under 12)">Dječje šišanje (do 12 g.)</h3>
           <div class="svc-meta">
             <span class="svc-mins">25 min</span>
-            <span class="svc-amt">12 €</span>
           </div>
         </div>
       </article>
@@ -1303,7 +1295,7 @@ footer{border-top:1px solid var(--rule);}
 <footer>
   <div class="wrap ft">
     <span data-en="Barber 33, walk-in barbershop in Poreč.">Barber 33, walk-in barbershop u Poreču.</span>
-    <a href="#cjenik" data-en="Prices">Cjenik</a>
+    <a href="#cjenik" data-en="Services">Usluge</a>
     <a href="#vrijeme" data-en="Hours">Radno vrijeme</a>
     <span class="sp" data-en="No appointments. First come, first served.">Bez naručivanja. Po redu dolaska.</span>
   </div>
