@@ -12,11 +12,14 @@ a cut costs, and which way to walk.
 
 The phone, the address and the opening hours are in. What is left:
 
-1. **The Instagram handle**, in the `SHOP` object at the foot of
-   `index.html`. It is the only empty field, and two things wait on it: the
-   contact row, and the tag in the corner of the hero stage that sends
-   anyone who likes the four cuts to the rest of them. While it stays empty
-   both take themselves off the page rather than link somewhere wrong.
+1. **The Instagram handle is set to `barber33_porec`, unconfirmed.** It was
+   found by search, not given to us: the profile reads "Barber shop 33 ·
+   Porec", which is the right name in the right town, but the profile itself
+   could not be opened to check the address or number against the shop's. It
+   drives the tag in the corner of the hero stage, the contact row and the
+   `sameAs` in the JSON-LD, so if it is wrong it sends customers to a
+   stranger. Worth thirty seconds of the shop's time to confirm. Emptying
+   the field in `SHOP` takes all three back off the page.
 2. **Sunday.** The hours came from a listing that was cut off after
    Saturday, so Sunday is set closed on an assumption and nothing else.
 3. **The prices and durations** in the Cjenik section, which are still the

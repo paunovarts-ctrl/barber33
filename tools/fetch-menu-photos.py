@@ -20,7 +20,7 @@ URLS = {
  "fade":           "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540218000_bc52dd82_1790540218678_27c83934.png",
  "sisanje-brada":  "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540219475_8956add1_1790540219917_696234ac.png",
  "brada":          "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540266477_fcd2bed6_1790540266902_6a242a08.png",
- "britva":         "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540269438_c726f3a0_1790540269969_5f6e287b.png",
+ "britva":         "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790606331157_49f024ea_1790606331992_4a51104b.png",
  "glava":          "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540270593_6559f80e_1790540271228_b300b692.png",
  "djecje":         "https://cdn.openart.ai/openart-ai/production/2026-09/create-image/McR5lRTZfGEldEHAz3c7/image_1790540272007_39d59f2d_1790540272658_d0d5dd79.png",
 }
